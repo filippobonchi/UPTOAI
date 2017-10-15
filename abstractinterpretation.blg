@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: abstractinterpretation.aux
+The style file: spmpsci.bst
+Database file #1: references.bib
+Warning--I didn't find a database entry for ""
+You've used 7 entries,
+            2946 wiz_defined-function locations,
+            686 strings with 6057 characters,
+and the built_in function-call counts, 5037 in all, are:
+= -- 605
+> -- 69
+< -- 4
++ -- 55
+- -- 22
+* -- 198
+:= -- 493
+add.period$ -- 15
+call.type$ -- 7
+change.case$ -- 37
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 567
+empty$ -- 344
+format.name$ -- 25
+if$ -- 1077
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 60
+newline$ -- 43
+num.names$ -- 14
+pop$ -- 220
+preamble$ -- 2
+purify$ -- 25
+quote$ -- 0
+skip$ -- 290
+stack$ -- 0
+substring$ -- 240
+swap$ -- 455
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 26
+warning$ -- 0
+while$ -- 27
+width$ -- 8
+write$ -- 91
+(There was 1 warning)

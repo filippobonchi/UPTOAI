@@ -1,0 +1,225 @@
+% \newif\iflong\longfalse
+% \usepackage{xr}
+\let\proof\relax
+\let\endproof\relax
+\usepackage[T1]{fontenc}
+\usepackage{graphics,graphicx}
+\usepackage{color,amsmath,amsfonts,amsmath,amsthm,amssymb,setspace}
+\usepackage[curve,matrix,arrow,cmtip]{xy} 
+\usepackage{tikz}
+\usepackage{mathpartir}
+\usepackage{stmaryrd}
+\usepackage{bbold}
+\usepackage{pdfnotiz} 
+\usepackage{wrapfig}
+\usepackage{enumerate}
+\usepackage{thmtools}
+\usepackage{thm-restate}
+%\declaretheorem[name=Proposition,sibling=theorem]{prop}
+%\declaretheorem[name=Lemma,sibling=theorem]{lem}
+
+%\newcommand\appref[1]{\cite[Appendix~\ref{#1}]{this:long}}
+
+
+
+\definecolor{citecolor}{rgb}{0.0,0.4,0.0}
+\definecolor{urlcolor}{rgb}{0.0,0.0,0.4}
+\definecolor{linkcolor}{rgb}{0.0,0.0,0.4}
+\usepackage[breaklinks=true,colorlinks,linkcolor=linkcolor,urlcolor=urlcolor,citecolor=citecolor]{hyperref} 
+
+%\usepackage{tikz-cd}
+\usetikzlibrary{matrix}
+\usetikzlibrary{positioning,arrows,decorations.markings,calc}
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+   1 with {\arrow[semithick]{open triangle 60}}},
+   double distance=1.4pt, shorten >= 5.5pt,
+   preaction = {decorate},
+   postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+\tikzstyle{innerWhite} = [semithick, white,line width=1.4pt, shorten >= 4.5pt]
+
+%% Useful functors
+\newcommand{\powe}{\mathcal{P}}
+\newcommand{\pow}{\mathcal{P}_{\omega}}
+\newcommand{\powc}{\mathcal{P}_{\mathit{c}}}
+\newcommand{\lift}[1]{\overline{#1}}
+\newcommand{\laxlift}[1]{\Rel_{\subseteq}(#1)}
+\newcommand{\wlift}[1]{\Rel_{[\supseteq \subseteq]}(#1)}
+\newcommand{\fo}{F_{\subseteq}}
+\newcommand{\gor}{G_{\subseteq}}
+
+%% up-to techniques
+\newcommand{\Ctx}{\mathit{Ctx}}
+
+%% categories
+
+\newcommand{\A}{\mathbb A}
+\newcommand{\B}{\mathcal B}
+\newcommand{\C}{\mathcal C}
+\newcommand{\E}{\mathbb E}
+\renewcommand{\P}{\ensuremath{\mathcal E}}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+
+
+%% specific catgeories
+
+\newcommand{\Cat}{\mathsf{Cat}} 
+\newcommand{\Set}{\mathsf{Set}} 
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Relo}{\mathsf{Rel}^\uparrow}
+\newcommand{\Pred}{\mathsf{Pred}} 
+\newcommand{\Alg}{\mathsf{Alg}} 
+\newcommand{\Pre}{\mathsf{Pre}}
+\newcommand{\Fib}{\mathsf{Fib}} 
+\newcommand{\Sign}{\mathsf{Sign}} 
+
+%% functors
+\newcommand{\Fcal}{\mathcal F}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Ical}{\mathcal{I}}
+\newcommand{\Ucal}{\mathcal U}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Gcal}{\mathcal G}
+\newcommand{\Vcal}{\mathcal V}
+\newcommand{\T}{\mathbb T}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\ID}{\mathrm{ID}}
+
+%free monad
+\newcommand{\fm}[1]{#1^*}
+
+%from gsos to dl
+\newcommand{\gsosdl}[1]{\rho_{#1}}
+
+
+\newcommand{\bSigma}{\mathbb{\Sigma}}
+
+% \newcommand{\op}{\mathit{op}}
+
+\newcommand{\bb}[1]{[\![ #1 ]\!]}
+
+
+% Coinductive predicate
+\newcommand{\pred}[2]{#1_{#2}} %coinductive predica for \xi^* \after \lift{F}
+\newcommand{\cpred}[2]{\pred{\Rel(#1)}{#2}}
+
+\newcommand{\gfp}[1]{\nu(#1)}
+
+%for weak bisimulation
+\newcommand{\sat}[1]{\mathit{sat}(#1)}
+
+%order stuff
+\newcommand{\vle}{\rotatebox[origin=c]{-90}{$\le$}}
+\newcommand{\vge}{\rotatebox[origin=c]{-90}{$\ge$}}
+\newcommand{\vincl}{\rotatebox[origin=c]{90}{$\subseteq$}}
+\newcommand{\uge}{\rotatebox[origin=c]{-90}{$\ge$}}
+\newcommand{\weord}{=\sqsupseteq}
+
+% nominal automata
+\newcommand{\Nom}{\mathsf{Nom}}
+\newcommand{\Pf}{\powe_{\omega}}
+\newcommand{\At}{\mathbb{A}}
+\newcommand{\Sub}{\mathsf{Sub}}
+
+
+\newcommand{\Gfp}[1]{\mathit{Gfp}^{#1}}
+\newcommand{\Cgr}{\mathit{Cgr}}
+\newcommand{\Tra}{\mathit{Trn}}
+\newcommand{\Sym}{\mathit{Sym}}
+\newcommand{\Ref}{\mathit{Rfl}}
+\newcommand{\Inv}{\mathit{Inv}}
+\newcommand{\Dia}{\mathit{Dia}}
+\newcommand{\Beh}{\mathit{Bhv}}
+\newcommand{\Con}{\mathit{Ctx}}
+\newcommand{\Slf}{\mathit{Slf}}
+\newcommand{\Eqv}{e}
+
+%% natural transformations
+\newcommand{\Ra}{\Rightarrow}
+
+%% Misc
+ \renewcommand{\bar}{\overline}
+
+ \newcommand{\op}{\mathit{op}}
+ \newcommand{\opu}{{-1}}
+ \newcommand\restr[2]{{% we make the whole thing an ordinary symbol
+  \left.\kern-\nulldelimiterspace % automatically resize the bar with \right
+  #1 % the function
+  \vphantom{\big|} % pretend it's a little taller at normal size
+  \right|_{#2} % this is the delimiter
+  }}
+\newcommand{\pullbackcorner}[1][dr]{\save*!/#1-1.5pc/#1:(-1.2,1.2)@^{|-}\restore}
+\newcommand{\darr}[1]{#1{\downarrow}}
+\newcommand{\ndarr}[1]{#1{\not\downarrow}}
+\newcommand{\Gr}{\mathsf{Gr}}
+  
+  % drawing automata
+\newcommand\dfa[1]{{%
+  \newcommand\state[1]{##1}%
+  \newcommand\fstate\overline%
+  #1}}
+% \newcommand\nfa[1]{{%
+%   \newcommand\state[1]{*++[o][F]{##1}}%
+%   \newcommand\fstate[1]{*++[o][F=]{##1}}%
+%   #1}}
+\newcommand\nfa\dfa
+
+%\newcommand\wa[1]{{%
+  \newcommand\wstate[2]{#1\downarrow #2}
+\def\tr#1{\stackrel{#1}{\to}}
+%\newcommand{\bb}[1]{[\![ #1 ]\!]}
+
+% \makeatletter
+% \newcommand{\superimpose}[2]{%
+%   {\ooalign{$#1\@firstoftwo#2$\cr\hfil$#1\@secondoftwo#2$\hfil\cr}}}
+% \makeatother
+
+\newcommand{\diamonda}{\langle a\rangle}%{\mathpalette\superimpose{{\Diamond}{a}}}
+\newcommand{\diamondtau}{\langle\tau\rangle}%{\mathpalette\superimpose{{\Diamond}{\tau}}}
+
+\newcommand{\boxtau}{[\tau]}%{\mathpalette\superimpose{{\Box}{\tau}}}
+
+
+% \newcommand{\veewedge}{\mathpalette\superimpose{{\vee}{\wedge}}}
+
+  
+\newcommand{\ldag}{\gsosdl{\lambda}}
+\newcommand{\ldagbar}{\bar{\ldag}} % I put the dagger inside because (-)^\dagger suggests a general construction, whereas the construction here is different than usual
+
+\newcommand{\Coalg}{\mathsf{Coalg}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\tvect}[2]{%
+  \ensuremath{\Bigl[\negthinspace\begin{smallmatrix}#1\\#2\end{smallmatrix}\Bigr]}}
+\newcommand{\nvect}[2]{%
+  \ensuremath{\left(\negthinspace\begin{matrix}#1\\#2\end{matrix}\right)}}
+\newcommand{\svect}[2]{%
+\ensuremath{\left(\negthinspace\begin{smallmatrix}#1\\#2\end{smallmatrix}\negthinspace\right)}}
+\newcommand{\dcoprod}{\textstyle{\coprod}}
+\newcommand{\To}{\Rightarrow}
+\newcommand{\flp}{\mathtt{flip}}
+
+\newcommand{\sem}{\mathbb{S}}
+
+\newcommand{\flip}{flp}
+
+
+\newcommand{\W}{\pred{\lift{F}}{\langle o^{\sharp},t^{\sharp}\rangle}}
+
+%\spnewtheorem{CA}[theorem]{Categorical Abstraction}{\bfseries}{\itshape} 
+\spnewtheorem{todo}[theorem]{TODO}{\bfseries}{\itshape} 
+\spnewtheorem{construction}[theorem]{Construction}{\bfseries}{\itshape} 
+\spnewtheorem{assumption}[theorem]{Assumption}{\bfseries}{\itshape} 
+\spnewtheorem{defn}[theorem]{Definition}{\bfseries}{\itshape}
+\spnewtheorem{prop}[theorem]{Proposition}{\bfseries}{\itshape}
+\spnewtheorem{exm}[theorem]{Example}{\itshape}{}
+\spnewtheorem{rmk}[theorem]{Remark}{\itshape}{}
+\spnewtheorem{lem}[theorem]{Lemma}{\bfseries}{\itshape}
+\spnewtheorem{cor}[theorem]{Corollary}{\bfseries}{\itshape}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% Local IspellDict: british
+%%% TeX-master: "main.tex"
+%%% End: 

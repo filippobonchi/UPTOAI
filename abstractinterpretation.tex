@@ -1,0 +1,1148 @@
+\documentclass[smallcondensed,envcountsect,envcountsame]{svjour3}     % onecolumn (ditto)
+\usepackage{macros}
+\journalname{Acta Informatica}
+
+
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\usepackage{maquereau}
+
+
+\definecolor{dkblue}{rgb}{0,0.1,0.6}
+\definecolor{dkgreen}{rgb}{0,0.35,0}
+\definecolor{dkviolet}{rgb}{0.3,0,0.5}
+\definecolor{dkred}{rgb}{0.5,0,0}
+\usepackage{listings}
+\usepackage{lstnt}
+
+
+\newtheorem{CA}[theorem]{Categorical Abstraction}
+\newtheorem{todo}[theorem]{\bf ToDo}
+
+
+
+
+
+\begin{document}
+
+
+\title{Rough notes on Abstract Interpretation and Coinduction Up-to
+}
+
+
+\author{Filippo Bonchi \and Roberto Giacobazzi \and Dusko Pavlovic}
+
+\authorrunning{F. Bonchi, R. Giacobazzi, D. Pavlovic}
+
+\institute{F. Bonchi \at
+              LIP, ENS Lyon, 46 All\'ee d'Italie, 69364 Lyon, FRANCE \\
+              \email{\{filippo.bonchi, damien.pous, jurriaan.rot\}@ens-lyon.fr}           %  \\
+%             \emph{Present address:} of F. Author  %  if needed
+%\\
+%D. Petri{\c s}an \at 
+%LIAFA, Universit{\' e} Paris-Diderot and CNRS, Case 7014, F-75
+%205 Paris Cedex 13\\
+%\email{petrisan@liafa.univ-paris-diderot.fr}
+}
+
+\date{Received: April 2017 / Accepted: NEVER}
+% The correct dates will be entered by the editor
+
+
+
+\maketitle
+
+\begin{abstract}
+In these notes, we report some of the result obtained during the visit of Roberto Giacobazzi at Dusko's lab in April 2017. We pay particular attention to \emph{proofs} since we expect that, being both abstract interpretation and coinduction up to meta-theory of proofs, the proofs themselves can inspire new results. 
+
+\noindent {\bf Summary of the results.}
+We observed several analogies between Abstract Interpretation and Coinduction up-to, as reported in Table \ref{table:analogies}.
+The notion of compatibility of an up-to technique was formerly introduced in the setting of Abstract Interpretation, under the name of Backward completeness.
+One major technology transfert comes from the modularity of up-to techniques, which has not been so much developed in abstract interpretation, because of the focus on abstract domains (up-closure functions).
+
+Whenever $b$ has a right adjoint $b^+$, the notions of forward completeness for $b$ and backward completeness for $b^+$ collapse. 
+%
+So both entail fixed-point completeness for abstract interpretation and soundness of up-to techniques.
+It is not clear yet, wether also the two problems collapse: this would be a major achievement.
+
+A further direction to explore is the correspondence between the companion, recently developed in coinduction up-to and the most abstract complete domain, important in several application of abstract interpretation.
+\end{abstract}
+
+\begin{todo}
+Read Samson's paper: https://www.dropbox.com/s/snbbyyrxe5waee9/absint-samson.pdf?dl=0
+\end{todo}
+
+\begin{todo}
+Read papers by Cousot: > http://www.di.ens.fr/~cousot/COUSOTpapers/publications.www/CousotCousot-PacJMath-82-1-1979.pdf <http://www.di.ens.fr/~cousot/COUSOTpapers/publications.www/CousotCousot-PacJMath-82-1-1979.pdf>
+\end{todo}
+
+%\section{Short summary of the results}
+
+
+
+
+
+
+\newpage
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{ccc}
+& Abstract Interpretation & Coinduction up-to\\
+\hline
+$b\colon C\to C$& Least fixed-point $\mu b$ & Greatest fixed-point $\nu b$\\
+$a\colon C\to C$& abstract domain & up-to techinque \\
+final aim & Completeness & Soundness \\
+sufficient condition & Forward completeness: $ba \sqsubseteq ab$ & Compatibility: $ab\sqsubseteq ba$ \\
+smart tricks & Most abstract complete domain & Companion \\
+\end{tabular}
+\caption{Analogies between Abstract Interpretation and Coinduction up-to.}\label{table:analogies}
+\end{center}
+\end{table}
+
+
+
+
+%\subsection{Coinduction up-to}
+%\label{ssec:intro:coinduction-upto}
+%
+%
+%
+%\paragraph{Short introductory summary copied by another paper.}
+%The rationale behind coinductive up-to techniques is the following.
+%Suppose you have a characterisation of an object of interest as a
+%greatest fixed-point. For instance, behavioural equivalence in CCS is
+%the greatest fixed-point of a monotone function $B$ on relations,
+%describing the standard bisimulation game. This means that to prove
+%two processes equivalent, it suffices to exhibit a relation $R$ that
+%relates them, and which is a \emph{$B$-invariant}, i.e., $R\subseteq
+%B(R)$. However, such a task may be cumbersome or inefficient, and one
+%might prefer to exhibit a relation which is only a $B$-invariant
+%\emph{up to some function} $A$, i.e., $R\subseteq B(A(R))$.
+%
+%Not every function $A$ can safely be used: $A$ should be \emph{sound}
+%for $B$, meaning that any $B$-invariant up to $A$ should be contained
+%in a $B$-invariant. Instances of sound functions for behavioural
+%equivalence in process calculi usually include transitive closure,
+%contextual closure and congruence closure.
+%%
+%The use of such techniques dates back to Milner's work on
+%CCS~\cite{Milner89}. A famous example of an unsound technique is
+%that of weak bisimulation up to weak bisimilarity. Since then,
+%coinduction up-to proved useful, if not essential, in numerous proofs
+%about concurrent systems (see~\cite{PS12} for a list of
+%references); it has been used to obtain decidability
+%results~\cite{Caucal90}, and more recently to improve standard
+%automata algorithms~\cite{bp:popl13:hkc}.
+%
+%The theory underlying these techniques was first developed by
+%Sangiorgi~\cite{San98MFCS}. It was then reworked and generalised by
+%one of the authors to the abstract setting of complete
+%lattices~\cite{pous:aplas07:clut,PS12}. The key observation there
+%is that the notion of soundness is not compositional: the
+%composition of two sound functions is not necessarily sound itself. 
+%The main solution to this problem consists in restricting to
+%\emph{compatible} functions, a subset of the sound functions which
+%enjoys nice compositionality properties and contains most
+%of the useful techniques.
+%
+%An illustrative example of the benefits of a modular theory is the
+%following: given a signature $\Sigma$, consider the \emph{congruence
+%  closure} function, that is, the function $\Cgr$ mapping a relation
+%$R$ to the smallest congruence containing $R$.  This function has
+%proved to be useful as an up-to technique for language equivalence of
+%non-deterministic automata~\cite{bp:popl13:hkc}.  It can be decomposed
+%into small pieces as follows: $\Cgr=\Tra\circ\Sym\circ\Con\circ\Ref$,
+%where $\Tra$ is the transitive closure, $\Sym$ is the symmetric 
+%%\marginpar{now we use different functors than $\Sym$, $\Ref$ in the main text}
+%closure, $\Ref$ is the reflexive closure, and $\Con$ is the context
+%closure associated to $\Sigma$.  Since compatibility is preserved by
+%composition (among other operations), the compatibility of $\Cgr$
+%follows from that of its smaller components.  In turn, transitive
+%closure can be decomposed in terms of relational composition, and
+%contextual closure can be decomposed in terms of the smaller functions
+%that close a relation with respect to $\Sigma$ one symbol at a
+%time. Compatibility of these functions can thus be obtained in a
+%modular way.
+%
+%\subsection{Completeness in Abstract Interpretation}
+%\label{ssec:intro:completeness}
+%
+%
+%\subsection{Bridging the gap}
+%\label{ssec:intro:gap}
+
+
+\section{Notation and preliminaries}
+%
+We introduce basic notation, concepts and results from lattice theory.
+
+We use $(L,\sqsubseteq)$, $(L_1,\sqsubseteq_1)$, $(L_2,\sqsubseteq_2)$ to range over complete lattices and $x,y,z$ to range over their elements. We omit the ordering $\sqsubseteq$ whenever unecessary. As usual $\bigsqcup$ and $\bigsqcap$ denote greatest lower bound and least upper bound, $\sqcup$ and $\sqcap$ denote join and meet, $\top$ and $\bot$ top and bottom.
+
+%A map $f\colon L_1\to L_2$ is said to be \emph{monotone} if $x\sqsubseteq_1 y$ entails that $f(x) \sqsubseteq_2 f(y)$. 
+Hereafter we will consider just monotone maps, so we will usually omit to specify that they are monotone. Obviously, the identitiy map $id\colon L\to L$ and the composition $f\circ g \colon L_1\to L_3$ of two monotone maps $g\colon L_1\to L_2$ and  $f\colon L_2\to L_3$  are monotone. Given $l \colon L_1 \to L_2$ and $r\colon L_2\to L_1$, we say that $l$ is the \emph{left adjoint} of $r$, or equivalently that $r$ is the \emph{right adjoint} of $l$, written $l\dashv r \colon L_1\to L_2$, iff $x\sqsubseteq_1 rl(x)$ and $lr(y) \sqsubseteq_2 y$ for all $x\in L_1$ and $y\in L_2$. Observe that if it exists the adjoint is unique. We will often use the fact that a map $f$ is a left adjoint iff it preserves $\bigsqcup$ (in particular $\bot$) and a right adjoint iff it preserves $\bigsqcup$ (in particular $\top$).
+
+Given a monotone map $f\colon L\to L$, $x$ is said to be a \emph{post-fixed point} iff  $x\sqsubseteq f(x)$ and a \emph{pre-fixed point} iff $f(x)\sqsubseteq x$. A \emph{fixed point} iff $x=f(x)$. Pre, post and fixed points form complete lattices, denoted by $Pre(f)$, $Post(f)$ and $Fix(f)$: we write $\mu f$ and $\nu f$ for the least and greatest fixed-point. Observe that if $l\dashv r$, then $x\sqsubseteq r(x)$ iff $l(x)\sqsubseteq l(r(x))$ iff $l(x)\sqsubseteq x$ and moreover $\mu l = \bot$ and $\nu r = \top$.
+
+
+For a map $f\colon L \to L$, we inductively define $f^0=id$ and $f^{n+1}=f\circ f^n$. We fix $f^\uparrow = \bigsqcup_{i\in \omega} f^i$ and $f^\downarrow = \bigsqcap_{i\in \omega} f^i$. A monotone map $f\colon L \to L$ is an \emph{up-closure} operator if $x\sqsubseteq f(x)$ and $ff(x) \sqsubseteq x$. It is a \emph{down-closure} operator if $f(x)\sqsubseteq x$ and $x \sqsubseteq ff(x)$. For any $f$, $f^\uparrow$ is an up-closure and $f^\downarrow$ is a down-closure. Closure operators and pairs of adjoints are in one to one correspondences: for a pair of adjoint $l\dashv r$, $r\circ l$ is an up-closure operator and $l\circ r$ a down-closure operator. Given an up-closure operator $f\colon L\to L$, the functions $l\colon L \to Pre(f)$, defined as $l(x) = \bigsqcap \{y \mid x\sqsubseteq y \sqsupseteq f(y) \}$ is the left adjoint of $r\colon Pre(f) \to L$, defined as $f(x)=x$.
+
+\medskip
+
+The Knaster-Tarski fixed-point theorem characterises $\mu f$ as the least upper bound of all pre-fixed points of $f$ and $\nu f$ as the
+greatest lower bound of all its post-fixed points:
+\begin{equation}\label{eq:KNfpthm}
+\mu f= \bigsqcap \{ x  \mid f(x) \sqsubseteq x \} \qquad \qquad \nu f= \bigsqcup \{ x  \mid x \sqsubseteq f(x) \}\text{.}\end{equation} This immediately leads to the
+\emph{induction} and \emph{coinduction} proof principles.
+\begin{equation}\label{eq:coinductionproofprinciple}\begin{array}{c}
+    \exists y, \;  f(y)\sqsubseteq y \sqsubseteq x\\
+    \hline \hline %\vspace{-0.2cm} \\
+    \nu f \sqsubseteq x
+\end{array}
+\qquad
+\qquad
+\begin{array}{c}
+    \exists y, \; x \sqsubseteq y\sqsubseteq f(y)\\
+    \hline \hline %\vspace{-0.2cm} \\
+    x \sqsubseteq \nu f
+\end{array}
+\end{equation}
+
+Another fixed-point theorem, usually attributed to Kleene, plays an important role in our exposition. It characterises $\mu f$ and $\nu f$ as the least upper bound, respectively the greatest lower bound, of the chains
+\begin{equation}\label{eq:initfinsequences}
+\bot \sqsubseteq f(\bot) \sqsubseteq ff(\bot) \sqsubseteq fff(\bot) \dots \qquad \qquad \top \sqsupseteq f(\top) \sqsupseteq ff(\top)  \sqsupseteq fff(\top) \dots 
+\end{equation}
+In short, 
+\begin{equation}\label{eq:Kleenefpthm}
+\mu f = \bigsqcup_{i\in \omega} f^i(\bot) \qquad \qquad \nu f = \bigsqcap_{i\in \omega} f^i(\top)
+\end{equation}
+The assumptions are stronger than for Knaster-Tarski: for the leftmost statement, it requires the map $f$ to be \emph{Scott-continuous} (i.e.., it preserves $\bigsqcup$ of directed chains) and, for the rightmost  \emph{Scott-cocontinuous} (similar but for  $\bigsqcap$). Observe that every left adjoint is Scott-continuous and every right adjoint is Scott-cocontinuous.
+%
+\begin{remark}[Duality]
+The two fixed-points theorems described above are usually formulated for the least fixed-point. The statements for the greatest fixed-point, on the right of \eqref{eq:KNfpthm} and \eqref{eq:Kleenefpthm}, can be proved simply by \emph{duality}: if a statement holds for an arbitrary complete lattice $(L, \sqsubseteq)$, it holds in particular also for its dual $(L, \sqsupseteq)$. 
+\end{remark}
+
+\begin{CA}
+Most of the theory developed in these notes can be extended from lattices to categories. In this perspective a lattice can be seen as a category, a monotone map as a functor, an up-closure operator as a monad and a down-closure operator as a comonad. Pre and post fixed point as algebras and coalgebras, least and greatest fixed point as the initial algebra and the final coalgebra. 
+\end{CA}
+
+
+
+\section{Coinduction for Determinitic Automata}\label{sec:DA}
+The two theorems introduced above suggest two different algorithms to check language equivalence of deterministic automata. 
+The Hopcroft algorithm \cite{} can be regarded as a direct incarnation of the Kleene theorem. Knaster and Tarski, instead suggests a more basic algorithm which is an unoptimised version of the Hopcroft and Karp's algorithm \cite{}.
+\medskip
+
+A deterministic automaton on the alphabet $A$ is a pair $(X,\langle
+o,t\rangle )$, where $X$ is a set of states and $\langle o,t\rangle
+\colon X \to 2\times X^A$ is a function with two components: $o$, the
+output function, determines if a state $x$ is final ($o(x) = 1$) or
+not ($o(x) = 0$); and $t$, the transition function, returns for each
+input letter $a \in A$ the next state.
+
+Every automaton $(X,\langle o,t\rangle)$ induces a function
+$\bb{-}\colon X \to 2^{A^*}$ mapping each state of the automaton
+to the language that it accepts. Formally this function is defined for all $x\in
+X$, $a \in A$ and $w\in A^*$ as follows.
+%
+\[
+\begin{array}{lcl}
+\bb{x}(\varepsilon) &=&  o(x) \\
+\bb{x}(aw)       &=&    \bb{t(x)(a)}(w)
+\end{array}
+\]
+%
+Two states $x,y\in X$ are said to be \emph{language equivalent}, in symbols
+$x \sim y$, iff  $\bb{x}=\bb{y}$.
+% $\sim = \{(x,y)\in X^2 \mid \bb{x}=\bb{y} \}$
+Alternatively, language equivalence can be defined \emph{coinductively} as the greatest
+fixed-point of a function $b$ on $\Rel_X$, the lattice of relations
+over $X$.  For all $R\subseteq X^2$, $b\colon \Rel_X \to \Rel_X$ is
+defined as
+%
+\begin{equation}\label{eq:functional-bisim-da}
+b(R)=\{(x,y) \mid o(x)=o(y) \text{ and for all } a\in A, \, (t(x)(a), t(y)(a))\in R  \}\text{.}
+\end{equation}
+%
+Indeed, one can check that $b$ is monotone and that the greatest
+fixed-point of $b$, hereafter denoted by $\nu b$, coincides with
+$\sim$. 
+
+Hopcroft algorithm is recalled in Figure \ref{fig:hopcroft}. It takes in input a DA $(X,\langle o,t\rangle )$  and gives as output the relation $\sim$.
+If the set $X$ contains $n$ states, then the algorithm  terminates in at most $n$ iterations: the key observation is that all the $R_i$ are \emph{equivalence} relations.
+The correctness of the algorithm follows immediately from Kleene's theorem: each of the $R_i$ is exactly $b^i(\top)$ and the Kleene chain stabilises after at most $n$ iterations.
+$$\top \supseteq b(\top) \supseteq bb(\top) \supseteq \dots \supseteq b^i(\top) \supseteq \dots \supseteq b^{n-1}(\top) \supseteq b^n(\top) = b^{n+1}(\top) = b^{n+2}(\top) \dots$$
+
+
+\begin{figure}[t]
+\centering
+\underline{\texttt{Hopcroft}}
+\begin{codeNT}
+(initialisation) $R_0 := \top$; 
+(iteration) $R_{i+1} := b(R_i)$; 
+(termination) if  $R_{i+1} = R_{i}$, then return $R_{i+1}$; 
+\end{codeNT}
+%\nocaptionrule
+\caption{Hopcroft algorithm to compute $\sim$ in a deterministic automaton $(X,\langle o,t\rangle )$.}
+\label{fig:hopcroft}
+\end{figure}
+
+\medskip
+
+The Knaster-Tarski theorem suggests a different algorithm, based on the coinduction proof principle. For the convenience of the reader, theorem and proof principle are instantiated for $b\colon Rel_X\to Rel_X$ on the left and on the right below. 
+\begin{equation}\label{eq:coinductionproofprinciple}
+\nu b= \bigcup \{ R \subseteq
+X^2 \mid R \subseteq b(R) \}
+\qquad
+\qquad
+\begin{array}{c}
+    \exists R, \; S \subseteq R\subseteq B(R)\\
+    \hline \hline %\vspace{-0.2cm} \\
+    S \subseteq \nu B
+\end{array}\end{equation}
+Hereafter we call a post-fixed point of $b$ a \emph{bisimulation}.
+The coinduction proof principle  allows to prove $x_1 \sim x_2$ by exhibiting a bisimulation $R$
+such that $\{(x_1,x_2)\} \subseteq R$. 
+
+For an example of a bisimulation, consider the following deterministic
+automaton, where final states are overlined and the transition
+function is represented by labeled arrows. The relation consisting of
+dashed and dotted lines is a bisimulation witnessing, for instance,
+that $x\sim u$.
+\begin{equation}\label{eq:exautomata}
+   \dfa{\xymatrix @R=.5em@C=1.5cm { %@R=.2em@C=.5cm {%
+       \state{x}\ar[r]^{a,b}\ar@{--}[dddd]& %
+       \fstate{y}\ar[r]^{a,b}\ar@{--}[ddd] \ar@{.}[rddd] &
+       \fstate{z}\ar@(ur,dr)^{a,b}\ar@{--}[ddd] \ar@{--}[lddd]\\\\\\
+       & \fstate{v}\ar@/^/[r]^{a,b}& %
+       \fstate{w}\ar[l]^{a,b}\\
+       \state{u}\ar[ru]^a\ar@/_1.1em/[rru]^b& }}
+\end{equation}
+
+Figure \ref{fig:naive} illustrates an algorithm, called \texttt{Naive}, that takes in input a DA $(X,\langle o,t\rangle )$ and a pair of states $(x_1,x_2)$. It returns true if $x_1\sim x_2$ and false otherwise. Note that this solves a rather different  problem than the Hopcroft's algorithm which computes $\sim$ over all the states in $X$. In a nutshell, one can say that  \texttt{Hopcroft} computes the largest bisimulation, while \texttt{Naive} the smallest bisimulation containing $\{(x_1,x_2)\}$.
+
+\begin{figure}[t]
+\centering
+\underline{\texttt{Naive} $(x_1,x_2)$}
+\begin{codeNT}
+(1) $R := \emptyset$; $todo := \emptyset$
+(2) insert $(x_1,x_2)$ into $todo$
+(3) while $todo$ is not empty do 
+   (3.1)  extract $(x_1',x_2')$ from $todo$
+   (3.2)  if $(x_1',x_2')\in R$ then continue
+   (3.3)  if $o(x_1')\neq o(x_2')$ then return false
+   (3.4)  for all $a\in A$, 
+             insert $(t_a(x_1'),\,t_a(x_2'))$ into $todo$
+   (3.5)  insert $(x_1',x_2')$ into $R$ 
+(4) return true
+\end{codeNT}
+%\nocaptionrule
+\caption{Naive algorithm to check the equivalence of states $x_1,x_2\in X$ for a deterministic automaton $(X,\langle o,t\rangle )$.}
+\label{fig:naive}
+\end{figure}
+ The soundness of \texttt{Naive} can be easily proved by means of coinduction: observe that during the while loop \texttt{(3)} the invariant 
+ $$R\subseteq b(R) \cup todo$$
+always holds. The algorithm return true only if $todo$ is empty and thus $R\subseteq b(R)$. This means that $R$ is a bisimulation containing $(x_1,x_2)$. By coinduction $x_1\sim x_2$. 
+
+\begin{question}
+The proof of \emph{completeness} of \texttt{Naive} does not involve coinduction and seems to be somehow related to induction and abstract interpretation. One has to prove that the algorithm returns false only if $x_1\not \sim x_2$. The key (inductive?) observation is that for every pair $(x_1',x_2')$ extracted from $todo$, there exists a word $w\in A^*$ such that $x_1 \tr{w}x_1'$ and $x_2 \tr{w}x_2'$. Now, the algorithm returns false only if $o(x_1') \neq o(x_2')$ which means $\bb{x_1}(w)\neq \bb{x_2}(w)$. Is there a nicer way to prove this by induction? Or by means of abstract interpretation?
+\end{question}
+
+The algorithm \texttt{Naive} requires at most $1 + |A| \times |R|$ iterations, where $|A|$ is the size of the alphabet $A$ and $|R|$ the size of the returned relation $R$. Therefore, if $X$ has $n$ states, the algorithm has worst case complexity $\mathcal{O}(n^2)$. This is much worst than the Hopcroft's algorithm but, as we will seen in Section \ref{ssec:HK}, this can be improved by means of up-to techniques. Most importantly, when it comes to check language equivalence for non-deterministic automata, the combined use of up-to techniques and \texttt{Naive} leads to the most efficient algorithm~\cite{bp:popl13:hkc}.
+
+
+\section{Coinduction up-to}
+\label{sec:upto}
+Let $b \colon C \to C$ be a (monotone) map on a complete lattice $C$. We adopt this notation, since in the abstract interpretation perspective $C$ will represent the concrete domain. 
+The map $b$, like in the case of automata, defines our object of interest $\nu b$. More generally, we are interested in proving that $x\sqsubseteq \nu b$ for a given element $x$ of the lattice.
+
+An \emph{up to technique} is a monotone map $a \colon C \to C$. A \emph{bisimulation up to} $a$ is a post-fixed point of $ba$, that is an $x$ such that $x\sqsubseteq ba(x)$. An up-to technique $a$ is said to be \emph{sound} for $b$ if the following \emph{coinduction up to} principle holds.
+
+\begin{equation}\label{eq:coinductionuptoproofprinciple}
+ \begin{array}{c}
+    \exists y, \; x \sqsubseteq y\sqsubseteq ba(y)\\
+    \hline %\hline %\vspace{-0.2cm} \\
+    x \sqsubseteq \nu b
+\end{array}
+\end{equation}
+
+\begin{remark}[completeness of up-to technique]\label{rmk:completenessupto}
+Observe that, according to the above definition an up-to technique $a$ might not be \emph{complete}: it may exists an $x$ such that $x \sqsubseteq \nu b$ for which there is no $y$ satisfying  $x \sqsubseteq y\sqsubseteq ba(y)$. However, if $a$ is an up-closure operator, then $\nu b  \sqsubseteq a(\nu b)$ and using monotonicity of $b$, one obtains that 
+$x \sqsubseteq \nu b = b(\nu b) \sqsubseteq b(a (\nu b))$. The question of completeness for up-to techniques has never been raised because they have always been thought as up-closure operators: e.g., up-to equivalence, up-to congruence, up-to bisimilarity. The only reason for considering arbitrary monotone maps rather than just up-closure operators, comes from the fact that the former allows for more modular proofs of their soundness. This is discussed in more details in Section \ref{sec:mod}.
+\end{remark}
+
+\begin{todo} 
+Check whether in the original work of Milner up to techniques are defined as closure operators or monotone maps. 
+\end{todo}
+
+
+
+\subsection{Hopcroft and Karp's algorithm}\label{ssec:HK}
+
+The famous algorithm by Hopcroft and Karp for checking language
+equivalence~\cite{HopcroftKarp} relies on coinduction implicitly,
+long before Milner's pioneering work on bisimulation. Hopcroft and Karp actually
+use coinduction up to equivalence closure. Consider the function
+$\Eqv\colon \Rel_X \to \Rel_X$ mapping every relation $R\subseteq X^2$
+to its equivalence closure. A \emph{bisimulation up to $\Eqv$} is a
+relation $R$ such that
+\begin{equation*}
+  \label{eq:uptoeq}
+  R\subseteq b (\Eqv (R))\text{.}
+\end{equation*} 
+For example, consider the automaton in \eqref{eq:exautomata} and the relation $R$
+containing only the dashed lines: since $t(x)(b)=y$, $t(u)(b)=w$ and
+$(y,w)\notin R$, then $(x,u)\notin b(R)$. This means that $R$ is
+\emph{not} a bisimulation; however it is a bisimulation up to $\Eqv$,
+since $(y,w)$ belongs to $\Eqv (R)$ and $(x,u)$ to $b(\Eqv(R))$ .
+
+
+In general, bisimulations up-to can be smaller than plain bisimulation
+and this feature can have a relevant impact in the performance of
+algorithms for checking language equivalence. The Hopcroft and Karp's algorithm is defined like \texttt{Naive}, but replacing line \texttt{(3.2)} with the following.
+%
+\begin{codeNT}
+   (3.2)  if $(x_1',x_2')\in e(R)$ then continue
+\end{codeNT}
+This simple optimisation allows to reduce the worst case complexity of \texttt{Naive}: the size of the returned relation $R$ cannot be larger than $n$ (the number of states).
+
+The soundness of this algorithm can be proved similarly to the one for  \texttt{Naive}: during the while loop \texttt{(3)}, the invariant 
+ $$R\subseteq be(R) \cup todo$$
+always holds. The algorithm returns true only if $R\subseteq be(R)$. This means that $R$ is a bisimulation up to $e$ containing $(x_1,x_2)$. If $e$ is a sound for $b$ then, by  \eqref{eq:coinductionuptoproofprinciple}, one can conclude that $x_1\sim x_2$. 
+
+\medskip
+
+Proving the soundness of up to techniques might be rather complicated and error prone \cite{}. Most of the theory of coinduction up to focuses on finding good methods to prove soundness. In Section \ref{sec:comp}, we will illustrate the resulting theory and show that is closely related to the problem of completeness for abstract domain.
+For convenience of the reader, we report in Appendix \ref{app:moreexample} some further examples of applications of up to techniques in automata theory.
+
+%The case of non-deterministic automata is even more impressive:
+%another up-to technique, called \emph{up-to congruence}, allows for
+%an exponential improvement on the performance of algorithms for 
+%checking language equivalence~\cite{bp:popl13:hkc}. 
+
+\subsection{Induction (up to) for Deterministic Automata}
+%
+As already mentioned in Section \ref{sec:DA}, the \texttt{Naive} algorithm builds the smallest bisimulation containing the initial pair of states $\{(x_1,x_2)\}$. Rather than as the computation of a greatest fixed-point, \texttt{Naive} can be regarded as the computation of a least fixed-point.
+Let $b^*\colon \Rel_X \to \Rel_X$ be the function mapping every relation $R\in \Rel_X$ into
+\begin{equation}\label{eq:bstarDA}
+b^*(R) = \{(x_1',x_2') \mid \exists (x_1,x_2)\in R, a\in A \text{ s.t. }  t(x_1)(a)=x_1' \text{ and } t(x_2)(a)=x_2' \}
+\end{equation}
+and $reach_{x_1,x_2}\colon \Rel_X \to \Rel_X$ be defined as 
+$$reach_{x_1,x_2}(R) = b_1^*(R) \cup \{(x_1,x_2)\}\text{.}$$
+The least fixed-point of $reach_{x_1,x_2}$ is the set of all pairs of states reachable from $(x_1,x_2)$.
+Let us call $f$ the relation in $\Rel_X$ defined as 
+\begin{equation}\label{eq:fDA}
+f=\{(x_1,x_2)  \mid o(x_1)=o(x_2) \}\text{.}
+\end{equation}
+Then the problem of language equivalence can be rephrased as a problem of induction:
+$$x_1\sim x_2 \text{ iff } \mu (reach_{x_1,x_2}) \subseteq f\text{.}$$
+
+Now the soundness of \texttt{Naive} can be proved by means of induction: at any iteration of the while loop \texttt{(3)} the invariants
+$$reach_{x_1,x_2}(R) \subseteq R\cup todo \qquad \text{ and } \qquad R\subseteq f$$
+hold. The algorithm returns true only if $todo$ is empty, so that $reach_{x_1,x_2}(R) \subseteq R \subseteq f$. By the induction proof principle (on the left of \eqref{eq:coinductionproofprinciple}) we have that  $\mu (reach_{x_1,x_2}) \subseteq f$.
+\begin{question} 
+Can we elegantly prove completeness using an inductive approach?
+\end{question}
+
+The story of induction for determinitic autoamaton ends here. Up-to techniques do not work for induction in this setting. The dual of the coinduction up to principle in \eqref{eq:coinductionuptoproofprinciple}, the \emph{induction up to principle}, is given below.
+\begin{equation}\label{eq:inductionuptoproofprinciple}
+ \begin{array}{c}
+    \exists y, \;  ba(y) \sqsubseteq y\sqsubseteq x \\
+    \hline %\hline %\vspace{-0.2cm} \\
+    \mu b \sqsubseteq x
+\end{array}
+\end{equation}
+By taking $a=e$ and $b= reach_{x_1,x_2}$, the invariant 
+$$reach_{x_1,x_2}(e(R)) \subseteq R\cup todo $$
+does \emph{not} hold in the Hopcroft and Karp's algorithm. Intuitively, when using induction up to $a$, one would like $a$ to shrink relations rather than enlarging. Indeed, as explained in the following remark, induction up to makes sense when $a$ is a down-closure.
+\begin{remark}[Completeness of induction up-to]
+As for coinduction up-to, one may wonder about the completeness of induction up-to. Completeness holds whenever $a$ is a down-closure. Indeed $a(\nu b)\sqsubseteq \nu(b)$ and, by monotonicity of $b$, one obtains $ba(\nu b)\sqsubseteq b\nu b  = \nu b $.
+\end{remark}
+
+\begin{question}
+Researchers interested in coinduction up-to have been wondering for a while about induction up-to. As we will better explain later, coinduction up to $a$ can be seen in a category of coalgebras over the category of Eilenberg-Moore algebras for the monad $a$. Its dual, induction up to $a$, can be regarded in a  category of algebras over the category of Eilenberg-Moore coalgebras for the comonad $a$. While the former are common places in computer science (determinised automata, process calculi and so on), the latter does not show off much. What about physics? Can we find an interesting example? More particularly, can we make a nice (and reasonable) proof by means of induction up to? 
+\end{question}
+
+
+
+\section{Abstract Interpretation}
+Like for coinduction up to, the starting data for abstract interpretation are two monotone maps $a,b\colon C \to C$. But now, here, it is important that $a$ is an up-closure. As pointed out in Remark \ref{rmk:completenessupto}, this is morally the case also for up-to techniques, but for making soundness proofs modular is often convenient to require $a$ to be just a monotone map.
+
+We denote by $(\alpha \dashv \gamma) \colon C \to A$ the pair of adjoints associated with $a$. Intuitively, $C$ represents a \emph{concrete domain} of data, $A$ an \emph{abstract domain}, $\alpha\colon C \to A$  the \emph{abstraction} function and $\gamma \colon A \to C$ the \emph{concretisation}. The intuition for the ordering is that if $x\sqsubseteq y$, then $y$ contains less information than $x$: for $c\in C$ and $a\in A$, $\alpha(c)\sqsubseteq_A a$ (or equivalently $c\sqsubseteq_C \gamma (a)$) means that $a$ is a correct approximation of $c$. 
+
+In a nutshell, the main idea of abstract interpretation is to have a map $\overline{b}\colon A\to A$ representing the program $b$ but on the abstract domain $A$. \emph{Soundness} of $\overline{b}$ (w.r.t. $b$) means that
+$$\alpha(\mu b) \sqsubseteq_A \mu \overline{b}$$
+\emph{completeness} means that
+\begin{equation}\alpha(\mu b) = \mu \overline{b}\text{.}\end{equation}
+Observe that, while soundness is equivalent to $\mu b \sqsubseteq_A \gamma (\mu \overline{b})$, completeness does \emph{not} coincide with  $\mu b = \gamma (\mu \overline{b})$.
+
+
+Soundness is usually proved by a stronger property which is much easier to check:
+$$
+\alpha \circ b \sqsubseteq \overline{b} \circ \alpha\text{,} \qquad \qquad \text{ in diagram } \qquad \qquad
+{\lower-0.7cm\hbox{\xymatrix@R=0.2cm@C=0.2cm{A \ar[rr]^{\overline{b}} & & A\\ 
+& \rotatebox{135}{$\sqsubseteq$} \\
+C \ar[rr]_b \ar[uu]^\alpha & &  C \ar[uu]_\alpha
+} } }$$
+
+
+
+Once a pair of adjoints $(\alpha \dashv \gamma) \colon C \to A$ is fixed (or equivalently an abstract domain), one can always build a sound $\overline{b}$ as
+$$ \overline{b} = \alpha \circ b \circ \gamma \text{.}$$
+Indeed, $\alpha b \sqsubseteq \alpha b \gamma \alpha = \overline{b} \alpha$. This is not the case for completeness: not for all abstract domains and maps $b$, there exists a complete $\overline{b}$. However, if it exists, this is exactly $\alpha \circ b \circ \gamma$. Hereafter, we assume to have given $a$ and $b$ and we focus on the problem of completeness. We will see that this is intimately related to the problem of soundness for up-to techniques.
+
+\begin{remark}
+In Remark \ref{rmk:completenessupto}, we observed that given $a$ and $b$, the problem of completeness for up-to $a$ is trivial whenever $a$ is an up-closure. The above discussion shows that for abstract interpretation, it is the problem of soundness to be trivial.
+\end{remark}
+
+
+
+\section{Backward completeness}
+%
+Proving completeness of an abstract domain is usually rather complicated. In order to simplify these proofs, Cousot introduced in \cite{} the notion of full-completeness, which we will refer hereafter as backward completeness. An up-closure $a\colon C\to C$ is \emph{backward complete} w.r.t. $b\colon C\to C$ iff
+\begin{equation}
+ab = aba
+\end{equation}
+
+\begin{lemma}
+Let $b\colon C\to C$ be a monotone map and $a\colon C\to C$ an up-colure operator with $(\alpha \dashv \gamma)\colon C \to A$ as associated pair of adjoints. 
+%
+The followings are equivalent
+\begin{enumerate}
+\item $a$ is backward complete w.r.t. $b$: $ab = aba$;
+\item there exists a Kleisli law: $ba \sqsubseteq ab$;
+\item there exists a Kleisli extension $\overline{b}\colon A \to A$: $\overline{b} \alpha = \alpha b$.
+$$\xymatrix@R=0.2cm@C=0.2cm{A \ar[rr]^{\overline{b}} & & A\\ 
+&  \\
+C \ar[rr]_b \ar[uu]^\alpha & &  C \ar[uu]_\alpha
+}$$
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+The proof is trivial. We report it just for the sake of completeness.
+($1\Rightarrow 2$) $ab = aba \sqsupseteq ba$ since $a$ is an up-closure. ($2\Rightarrow 3$) It always holds $(\alpha b \gamma) \alpha \sqsupseteq \alpha b$. For the other inclusion, observe that if $ba \sqsubseteq ab$, then $b\gamma \alpha \sqsubseteq \gamma \alpha b$ and  $\alpha b\gamma \alpha \sqsubseteq \alpha \gamma \alpha b \sqsubseteq \alpha b$.
+($3 \Rightarrow 1$) Since $(\alpha b \gamma) \alpha = \alpha b$, then $\gamma (\alpha b \gamma) \alpha = \gamma\alpha b$, that is $aba = ab$.
+\end{proof}
+%
+\begin{proposition}[From Cousot POPL 1977 \cite{}]\label{prop:Cousot}
+Let $b\colon C\to C$ be a Scott-continuous map and $a\colon C\to C$ an up-closure operator. 
+If $a$ is backward complete, then it is complete. 
+\end{proposition}
+\begin{proof} 
+The assumption of Scott-continuity is necessary to characterise 
+%
+$$\alpha(\mu b) = \alpha (\bigsqcup_{n} b^n(\bot_C) ) \qquad \text{ and } \qquad \mu(\alpha b \gamma) =  \bigsqcup_{n} (\alpha b \gamma)^n(\bot_A) \text{.}$$ 
+Since $\alpha$ is a left adjoint we have that the leftmost is equivalent to  $ (\bigsqcup_{n}  \alpha b^n(\bot_C) $.
+
+By induction on $n$, we prove that $\alpha b^n(\bot_C) = (\alpha b \gamma)^n (\bot_A)$.
+\begin{itemize}
+\item For $n=0$, $\alpha(\bot_C) = \bot_A$;
+\item For $n+1$, we have that $\alpha b \gamma (\alpha b \gamma)^n (\bot_A) = \alpha b\gamma \alpha b^n (\bot_C)$ by induction hypothesis. Using the property of Kleisli lifting, the latter is equivalent to $\alpha b b^n (\bot_C) = \alpha b^{n+1}(\bot_C)$.
+\end{itemize}
+\end{proof}
+\begin{todo}
+Carefully compare with the proof of Cousot.
+\end{todo}
+
+\begin{question}
+Is there a nicer proof which does not use the assumption of Scott continuity?
+\end{question}
+
+
+
+\section{Forward completeness and compatible techniques}\label{sec:comp}
+
+Another condition, which is called in \cite{} forward completeness, plays a crucial role for our exposition. An up-closure $a\colon C\to C$ is \emph{backward complete} w.r.t. $b\colon C\to C$ iff
+\begin{equation}
+ba = aba
+\end{equation}
+
+
+\begin{lemma}
+Let $b\colon C\to C$ be a monotone map and $a\colon C\to C$ an up-colure operator with $(\alpha \dashv \gamma)\colon C \to A$ as associated pair of adjoints. 
+%
+The followings are equivalent
+\begin{enumerate}
+\item $a$ is forward complete w.r.t. $b$, i.e., $ba = aba$;
+\item there exists a EM law, i.e., $ab \sqsubseteq ba$;
+\item there exists a EM lifting $\overline{b}\colon A \to A$, i.e., $\gamma \overline{b} =  b \gamma$.
+$$\xymatrix@R=0.2cm@C=0.2cm{
+A \ar[rr]^{\overline{b}} \ar[dd]_\gamma & & A  \ar[dd]^\gamma \\ 
+&  \\
+C \ar[rr]_b & &  C 
+}$$
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+The proof is trivial. We report it just for the sake of completeness.
+($1\Rightarrow 2$) Since $b\circ a = a\circ b\circ a$ then $b\circ a = a\circ b\circ a \sqsupseteq a\circ b$. 
+%
+($2\Rightarrow 1$) Since $a\circ b \sqsubseteq b\circ a$, then $a\circ b \circ a \sqsubseteq b\circ a \circ a \sqsubseteq b \circ a$. The other inclusion, $b\circ a \subseteq  a\circ b\circ a$, holds since $a$ is an up-closure.
+%
+ ($2\Rightarrow 3$) Observe that $A=Pre(a)$ by construction. For every pre fixed-point $a(x)\sqsubseteq x$, it holds that $ab(x) \sqsubseteq ba(x)\sqsubseteq b(x)$, namely $b(x)$ is a pre fixed-point. One can therefore define $\overline{b}(x) = b(x)$. The fact that $\gamma \overline{b} =  b \gamma$ follows immediately by construction of $\gamma$. 
+ %
+ ($3 \Rightarrow 2$) By construction of $\gamma$, for every pre fixed point $x$, $b(x)$ is forced to be a pre fixed-point of $a$: $ab(x)\sqsubseteq b(x)$. Therefore  $ab(x)\sqsubseteq b(x) \sqsubseteq ba(x)$.
+\end{proof}
+%
+\begin{remark}
+From the proof of the above lemma, one can see that the assumption of $a$ being a up-closure operator is necessary only for  the first point. The correspondence of the last two points holds also when $a$ is not a closure operator: in this case, $A$ is the lattice of pre fixed-point of $a$ and $\gamma$ the obvious injection of $A$ in $C$. In this case, its left adjoint $\alpha$ does not exist.
+\end{remark}
+
+\begin{proposition}
+Let $a,b\colon C\to C$ be two monotone maps so that $a$ is backward complete w.r.t. $b$. Let $\overline{b}\colon A \to A$ be the corresponding EM lifting. Then $\gamma(\nu {\overline{b}}) = \nu b$.
+\end{proposition}
+\begin{proof}
+Recall that $A = Pre(a)$. By the Knaster-Tarski fixed-point theorem  $\gamma(\nu {\overline{b}}) =  \bigsqcup \{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \}$ and  $\nu b = \bigsqcup \{ x  \mid x \sqsubseteq b(x) \}$. Since $\{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \} \subseteq \{ x  \mid x \sqsubseteq b(x) \}$, then $\gamma(\nu {\overline{b}}) \sqsubseteq \nu b$.
+Observe that $a(\nu b) = ab(\nu b)\sqsubseteq ba(\nu b)$, namely $a(\nu b)$ is a post fixed-point of $b$. Therefore $a(\nu b) \sqsubseteq \nu b \sqsubseteq b(\nu b)$, which means $\nu b \in \{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \}$. This proves that $\nu b \sqsubseteq \gamma(\nu {\overline{b}})$.
+\end{proof}
+
+
+%
+%if $f$ is an up-closure the two concepts coincide
+%\begin{equation}f\circ b \sqsubseteq b\circ  f \text{ iff } b\circ f = f\circ b\circ f\end{equation}
+%\begin{proof}
+%Assume $f\circ b \sqsubseteq b\circ f$: then $f\circ b \circ f \sqsubseteq b\circ f \circ f \sqsubseteq bf$.
+%For the other direction, since $b\circ f = f\circ b\circ f$ then $b\circ f = f\circ b\circ f \sqsupseteq f\circ b$.
+%\end{proof}
+
+Exactly the same condition of backward completeness has been introduced also for up-to techniques, under the name of compatibility. An up-to technique $a\colon C\to C$ is said to be \emph{compatible} w.r.t. $b$ iff 
+$$ab \sqsubseteq ba$$ 
+Observe that this is just the definition of EM-law and, therefore, when $a$ is an up-closure coincides exactly with backward completeness.
+
+Like forward completeness entails completeness for abstract interpretation, compatibility entails soundness for up-to techniques.
+
+\begin{proposition}\label{prop:compatible}
+Let $a$ be compatible w.r.t. $b$. Then $a$ is sound w.r.t. $b$.
+\end{proposition}
+\begin{proof} 
+For each $y\sqsubseteq ba(y)$, $a(y)\sqsubseteq aba(y) \sqsubseteq baa(y) \sqsubseteq ba(y)$. Therefore $a(y)\sqsubseteq \nu b$. If $x\sqsubseteq y$, then $x\sqsubseteq a(y)\sqsubseteq \nu b$.
+\end{proof}
+Backward completeness instead does not entail (fixpoint) completeness for abstract interpretation. We will discuss this further in Section \ref{}.
+
+
+
+\begin{CA}
+Observe that we have called the conditions $ba \sqsubseteq ab$ and $ab \sqsubseteq ba$ Kleisli law and EM law. Indeed, one can think to the problem of completeness of abstract interpretation and soundness of up-to techniques as the problem of \emph{extending} and \emph{lifting} the functor $b\colon C \to C$ to some functor $\overline{b}$ either on the Kleisli category $Kl(a)$ or to the Eilenberg Moore category $EM(a)$ of algebras for the monad $a\colon C \to C$. In this case, since $C$ is a lattice, one has that $Kl(a) = EM(a) =A$. In this perspective, completeness of full abstraction means that there is a functor $\alpha \colon Alg(b) \to Alg(\overline{b})$ preserving initial algebra (this is entailed by requiring $\alpha$ to be a left adjoint). Similarly, soundness of up-to techniques means that there is a functor $\gamma \colon Coalg(\overline{b}) \to Coalg (b)$ that preserves the final coalgebra (this is entailed by requiring $\gamma$ to be a right adjoint). The latter is rather well-known problem (see e.g., non-deterministic automata as coalgebra, and GSOS specification). The latter is far less understood: see the attached scribble by Dusko. 
+
+\medskip
+
+\begin{tabular}{cc}
+Abstract Interpretation & Coinduction up-to\\
+\hline
+Kleisli law $ba \sqsubseteq ab$ & EM-law $ab \sqsubseteq ba$  \\
+Kleisli Extension $\overline{b} \colon Kl(a) \to Kl(a)$ & EM lifting $\overline{b} \colon EM(a) \to EM(a)$\\
+$\alpha \colon Alg(b) \to Alg(\overline{b})$ is a left adjoint & $\gamma \colon Coalg(\overline{b}) \to Coalg (b)$ is a right adjoint \\
+\end{tabular}
+
+\end{CA}
+
+
+\section{Modularity}\label{sec:mod}
+%
+Before focusing on our (so far) main achievement, we make a short detour, explaining one of the side result of our comparison.
+
+We have seen that up-to techniques are morally up-closure, but they are usually defined as monotone maps. The reason for this definition is that one can define operations on functions, in a much straightforward way, e.g., both $f\sqcup g$ and $f\sqcap g$ are defined pointwise for all maps $f,g\colon C \to C$, while the pointwise joint of two up-closures is not necessarily an up-closure. The following proposition allows to make modular proof of compatibility or, in term of abstract interpretation, backward completeness.
+
+
+\begin{proposition}[modularity]\label{prop:mod}
+Let $a,b,a_1,a_2,b_1,b_2\colon C\to C$ be monotone maps on some complete lattice $C$. 
+Then:
+\begin{enumerate}
+\item[1.] $id \circ b \sqsubseteq b \circ id$;
+\item[2.] if  $a_1 \circ b \sqsubseteq b \circ a_1$ and $a_2 \circ b \sqsubseteq b \circ a_2$, then $(a_1 \circ a_2) \circ b \sqsubseteq b \circ (a_1 \circ a_2)$.
+\end{enumerate}
+Moreover:
+\begin{enumerate}
+\item[3.] if  $a_1 \circ b \sqsubseteq b \circ a_1$ and $a_2 \circ b \sqsubseteq b \circ a_2$, then $(a_1 \sqcup a_2) \circ b \sqsubseteq b \circ (a_1 \sqcup a_2)$;
+\item[4.] if  $a \circ b \sqsubseteq b \circ a$, then $a^\uparrow \circ b \sqsubseteq b \circ a^\uparrow$.
+\end{enumerate}
+Dually:
+\begin{enumerate}
+\item[5.] if  $a \circ b_1 \sqsubseteq b_1 \circ a$ and $a \circ b_2 \sqsubseteq b_2 \circ a$, then $a\circ  (b_1 \sqcap  b_2) \sqsubseteq (b_1 \sqcap b_2) \circ a$;
+\item[6.] if  $a \circ b \sqsubseteq b \circ a$, then $a \circ b^\downarrow \sqsubseteq b^\downarrow \circ a$.
+\end{enumerate}
+\end{proposition}
+\begin{todo}
+The proof is simple but should be written down.
+\end{todo}
+
+This proposition has been exploited extensively for up-to techniques. We illustrates its importance below.
+
+ 
+ \subsection{Back to Hopcroft and Karp: proving soundness of equivalence closure.}\label{sec:HKsoundness}
+ Recall the monotone map $b\colon \Rel_X \to \Rel_X$ defined in \eqref{eq:functional-bisim-da} and the up-closure $e\colon \Rel_X \to \Rel_X$ introduced in Section \ref{ssec:HK}.
+ In order to prove that the Hopcroft and Karp algorithm is sound one has to relies on the fact that $e$ is sound w.r.t. $b$. 
+ Thanks to Proposition \ref{prop:compatible}, one can prove soundness by showing that $e$ is compatible w.r.t. $b$. The proof of compatibility can be simplified by mean of Proposition \ref{prop:mod}.
+
+For every relation $R\subseteq X\times X$, define  $r,s,t\colon \Rel_X \to \Rel_X$ as follows.
+$$r(R) = \{(x,x)\mid x\in X \} \qquad s(R)=\{(y,x)\mid (x,y)\in R\}$$ 
+$$t(R)=\{(x,z) \mid \exists y \text{ s.t. } (x,y) \in R \text{ and } (y,z)\in R\} $$
+Observe that $r$ is a constant function, mapping every relation into the identity relation. Intuitively $r\sqcup id$ is the reflexive closure. 
+Similarly $s$ maps a relation $R$ into ints inverse $R^{-1}$: again $s \sqcup id$ is the symmetric closure. The function $t$ is called the squaring function: to obtain the transitive closure one has to take $t^\uparrow$. Now, the equivalence closure can be decomposed as 
+$$e= (id\sqcup r \sqcup s \sqcup t )^\uparrow$$
+In order to prove compatibility of $e$, it is enough to prove, thank to Proposition \ref{prop:mod}, compatibility of the much simpler functions $r,s,t$. We leave this simple task to the reader.
+
+\begin{remark}[Modularity for forward completeness]
+As the notions of forward completeness and compatibility coincide, one can use Proposition \ref{prop:mod} also for making modular proofs of forward completeness. Observe that, by point $4.$ of Proposition \ref{prop:mod}, one can always obtain an up-closure operator. For instance suppose to have two up-closure operator $a_1$ and $a_2$ that are both forward complete. Then $a_1 \sqcup a_2$ is still forward complete, but it is not an up-closure. To have an up-closure, one takes $(a_1\sqcup a_2)^\uparrow$ which is ensured to be forward complete by points $3.$ and $4.$ of Proposition \ref{prop:mod}.
+\end{remark}
+\begin{todo}
+Modularity for forward completeness for abstract domains has been studied quite a lot. We should check whether this new perspective really brings something interesting.
+\end{todo}
+
+\section{Relating Abstract Interpretation and Coinduction up-to by adjointness}
+To relate abstract interpretation and coinduction up-to we need to assume that the monotone map $b\colon C\to C$ is part of an adjunction.
+Hereafter we denote the adjunction by $b^*\dashv b_* \colon C\to C$. Our idea is based on the observation in \cite{} relating backward and forward completeness:
+$$ ab^* = ab^*a \quad \text{ iff } \quad b_*a = ab_* a \text{.}$$
+We find convenient to rephrase this as
+\begin{equation}\label{eq:bridge}
+b^*a \sqsubseteq ab^*\quad \text{ iff } \quad ab_* \sqsubseteq b_*a \text{.}
+\end{equation}
+Note however that since $b^*$ is a left adjoint and $b_*$ is a right adjoint one always has that $\mu b^* = \bot$ and $\nu b_* = \top$, meaning that the abstract interpretation and coinduction up-to are always rather trivial.
+
+
+We then consider some \emph{intial} and \emph{final} conditions $i,f\in C$. With an abuse of notation, we will use this letter also to denote the constant functions $i\colon C\to C$ and $f\colon C\to C$ mapping all elements to, respectively, $i$ and $f$.
+We consider the problem of completeness of $a$ w.r.t. $b^*\sqcup i$ and the problem of soundness w.r.t. $b_*\sqcap f$.
+
+The former is entailed by backward completeness
+$$(b^* \sqcup i) a \sqsubseteq a (b^* \sqcup i)$$
+which, by Proposition \ref{prop:mod}.3 is entailed by 
+\begin{equation}\label{fori}
+b^*a \sqsubseteq a b^*  \quad \text{ and } \quad i \sqsubseteq ai \text{.}\end{equation}
+Soundness is entailed by forward completeness (or compatibility)
+$$
+a(b_*\sqcap f) \sqsubseteq (b_* \sqcap f) a \text{.}
+$$
+which, by Proposition \ref{prop:mod}.5 is entailed by 
+\begin{equation}\label{backf}
+ab_* \sqsubseteq b_*  a \quad \text{ and } af \sqsubseteq f \text{.}
+\end{equation}
+Observe that there is a slight asymmetry in \eqref{fori} and \eqref{backf}: the condition $i \sqsubseteq ai $ is guaranteed for any $i\in C$, since $a$ is an up-closure. This is not the case for $af \sqsubseteq f $.
+
+Therefore the data that allows to link abstract interpretation and coinduction up-to are:
+\begin{itemize}
+\item $b^*\dashv b_* \colon C\to C$,
+\item $a\colon C \to C$,
+\item $i\in C$,
+\item $f\in C$ such that $af \sqsubseteq f$.
+\end{itemize}
+In this setting, by mean of \eqref{eq:bridge}, $a$ is forward complete w.r.t. $b^*$ iff  $a$ is backward complete w.r.t. $b_*$. These entails both that 
+$a$ is forward complete w.r.t. $b^*\sqcup i $ and $a$ is backward complete w.r.t. $b_* \sqcup f$.
+
+\begin{remark}
+Apparently, we do not have an iff between the conditions of $a$ is forward complete w.r.t. $b^*\sqcup i $ and $a$ is backward complete w.r.t. $b_* \sqcup f$.
+\end{remark}
+\begin{todo}
+Please check carefully the iff in the remark.
+\end{todo}
+
+
+
+%\begin{equation} 
+%b^* a \sqcup i  \sqsubseteq ab^* \sqcup ai \quad \text{ iff } \quad ab_*\sqcap af \sqsubseteq b_*a \sqcap f \text{.}
+%\end{equation}
+
+
+\subsection{Hopcroft and Karp as complete abstract interpretation}
+We now show how the Hopcroft and Karp algorithm can be seen as an instance of complete abstract interpretation, using the technology developed above.
+
+First of all observe that $b\colon \Rel_X\to \Rel_X$ in \eqref{eq:functional-bisim-da} can be decomposed as
+$$b = b_* \sqcap f$$
+where $b_* \colon \Rel_X\to  \Rel_X$ is defined for all relations $R$ as
+\begin{equation}
+b_*(R) =\{(x,y) \mid \text{ for all } a\in A, \, (t(x)(a), t(y)(a))\in R  \}
+\end{equation}
+and $f\colon \Rel_X \to \Rel_X$ maps everything to the relation $f$ defined in \eqref{eq:fDA}.
+Now recall the up-closure $e\colon \Rel_X \to \Rel_X$ mapping each relation in its equivalence closure. It is immediate to see that $f\in \Rel_X$ is an equivalence relation, that is $e(f)\subseteq f$.
+
+The function $b_*$ has a left adjoint, which is exactly $b^*$ as defined in \eqref{eq:bstarDA}. We take $i$ to be the singleton relation containing the pair of initial states $(x_1,x_2)$.
+
+These are all the data needed to link coinduction up-to and abstract interpretation.
+Indeed, the problem of language equivalence for $x_1$ and $x_2$ can be regarded both in an inductive and a coinductive way:
+$$ \mu (b^*\cup i ) \subseteq  f \qquad  \text{ iff }\qquad i \subseteq \nu (b_*\cap f)\text{.}$$ 
+We have shown that the righmost inclusion can be checked using coinduction up-to $e$. To prove soundness of this technique we needed to prove that $e$ is compatible w.r.t. $b=(b_*\cap f)$. One can easily check that $e$ is also compatible w.r.t. $b_*$.
+
+\begin{remark}
+Unfortunately here, we cannot say that the fact that $e$ is compatible w.r.t. $b=(b_*\cap f)$ entails that $e$ is compatible w.r.t. $b_*$. the other implication hold, but not this one. Indeed: 
+$$e(b_*\cap f) \subseteq (b_*\cap f) e \text{ iff } eb_* \cap ef \subseteq b_* e \cap f \text{ iff }  eb_* \cap ef \subseteq b_* e \text{ and }  eb_* \cap ef \subseteq  f\text{.}$$
+\end{remark}
+\begin{todo}
+Understand this remark better.
+\end{todo}
+
+\begin{todo}
+The problem in the remark above can be done more smooth by using a different proof strategy. We decompose $b = b=(b_*\cap f)$ already in Section \ref{sec:HKsoundness} and we use modularity w.r.t. $\cap$ to prove compatibility of $e$. This would look more natural in a final version of the paper.
+\end{todo}
+Now, since $e$ is compatible w.r.t. $b_*$, we have by \eqref{eq:bridge} that it is forward complete w.r.t. $b^*$ and, by the fact that $i\subseteq e(i)$ and Proposition \ref{prop:mod}.5, also w.r.t. $b^*\cup i$. By Proposition \ref{prop:Cousot}, $e$ is a complete domain for abstract interpretation. 
+
+This provides a novel perspective on the Hopcroft and Karp's algorithm. It can be though as the computation of the least fixed-point  of the function $b^*\cup i$ abstracted to the lattice of equivalence relations $ERel_X$. We denote this function by $\overline{b^*\cup i}\colon ERel_X \to ERel_X$ and $\alpha \dashv \gamma \colon Rel_X \to ERel_X$ the pair of adjoint associated to $e$. The map $\alpha$ assign to every relation its equivalence closure; $\gamma$ is just the obvious injection. The function $\overline{b^*\cup i}$ is just $\alpha \circ (b^*\cup i) \circ \gamma$: it basically takes an equivalence relation, computes $b^*\cup i$ and then makes its equivalence closure. The algorithm returns true iff $\mu (\overline{b^*\cup i}) \subseteq f$. Soundness is trivial: if $\mu (\overline{b^*\cup i})  \subseteq f$, then $$\mu (b^*\cup i) \subseteq \gamma \alpha \mu (b^*\cup i) \subseteq \gamma \mu (\overline{b^*\cup i}) \subseteq \gamma  f =f\text{.}$$
+
+Completeness informs us that $\mu  (\overline{b^*\cup i}) = \alpha  \mu (b^*\cup i)$: if $\mu (b^*\cup i) \subseteq f$, then $$\mu (\overline{b^*\cup i})  = \alpha \mu ((b^*\cup i)) \subseteq \alpha(f) = f\text{.}$$
+
+\subsection{Fixed-point completeness}
+So far, we have established a link between the sufficient conditions (see Table \ref{table:analogies}), namely between forward completeness of an abstract domain and compatibility of an up-to technique. Is it the case that one can establish a link also the final aims, that is completeness of an abstract domain and soundness of an up-to technique?
+
+Hereafter, we reformulate the question in purely lattice-theoretic terms.
+
+\medskip
+
+Given, 
+\begin{itemize}
+\item an adjunction of monotone maps $b^*\dashv b_* \colon C\to C$,
+\item an up-closure $a\colon C \to C$, with corresponding pair of adjoints $\alpha \dashv \gamma$,
+\item an element $i\in C$,
+\item a pre-fixpoint $f\in C$, i.e., an element such that $af \sqsubseteq f$.
+\end{itemize}
+Does it hold that
+$$\alpha (\mu(b^* \sqcup i)) = \mu (\alpha \circ  (b^* \sqcup i) \circ \gamma ) \qquad  \text{ iff } \qquad \nu((b\sqcap f)a) = \nu( b \sqcap f) \qquad \text{?}$$
+
+
+We have explored this in a rather extensive way without finding either a proof or a counterexample. Some hints could come by assuming the lattice $C$ to be boolean.
+Some partial but interesting results are in the attached notes scanned by Roberto.
+
+
+\section{Most abstract Complete domain and companion}
+
+\begin{todo}
+This is a completely unexplored field where I can we can say a lot. We should look at really carefully.
+\end{todo}
+
+
+\section{Side tracks}
+We conclude these notes with some ideas that emerged during the discussion, but that does not seem to play a pivotal role in the actual development.
+
+
+\subsection{Up-to techniques for induction and coinduction}
+
+Hereafter we compare soundness and completeness of induction up-to (on the left) and coinduction up-to (on the right) for two monotone maps $a,b\colon C\to C$.
+
+ \begin{equation}\label{eq:comparisonincoin}
+ \begin{array}{c}
+    \exists y, \;  ba(y) \sqsubseteq y\sqsubseteq x \\
+    \hline %\hline %\vspace{-0.2cm} \\
+    \mu b \sqsubseteq x
+\end{array}
+\qquad \qquad \qquad
+ \begin{array}{c}
+    \exists y, \; x \sqsubseteq y\sqsubseteq ba(y)\\
+    \hline %\hline %\vspace{-0.2cm} \\
+    x \sqsubseteq \nu b
+\end{array}
+\end{equation}
+
+We distintiguish two important cases, when $a$ is an up-closure and when it is a down-closure.  Apart from the cases marked with $?$, for which we have not found yet a simple condition (and probably we will never find), all the proofs are given in the lemmas below. The missing cases are obtained by duality.
+
+\begin{center}
+\begin{tabular}{cccc}
+& & Induction & Coinduction \\
+\hline \\
+\hline \\
+$a$ up-closure  & Soundness & Trivial & $ab\sqsubseteq ba$ \\
+                          & Completeness & $?$ & Trivial \\
+                     \hline
+$a$ down-closure  & Soundness & $ba\sqsubseteq ab$ & Trivial \\
+                          & Completeness & Trivial & $?$ \\                          
+\end{tabular}
+\end{center}
+
+
+
+\begin{lemma}
+Let $a$ be an up-closure. Then coinduction up-to $a$ is complete.
+\end{lemma}
+\begin{proof} 
+Take $y=\nu b$. Since, $a$ is an up-closure $\nu b \sqsubseteq a \nu b$. Then $x\sqsubseteq \nu b =b \nu b \sqsubseteq ba\nu b$.
+\end{proof}
+
+\begin{lemma}
+Let $a$ be an up-closure. If $ab\sqsubseteq ba$, then coinduction up-to $a$ is sound.
+\end{lemma}
+\begin{proof}
+Note that the statement is exactly the same of Proposition \ref{prop:compatible}. We copied here once more for the convenience of the reader.
+\end{proof}
+
+
+\begin{lemma}
+Let $a$ be an up-closure. Then induction up-to $a$ is sound.
+\end{lemma}
+\begin{proof} 
+Since, $a$ is an up-closure, then $b(y) \sqsubseteq ba(y) \sqsubseteq y$. Therefore $\mu b \sqsubseteq y \sqsubseteq x$.
+\end{proof}
+
+
+%Now consider the following proof principle, which is like induction up-to but $a$ is applied to the argument $x$ in both premises and conclusion.
+%We assume $a\colon C\to C$ to be an up-closure operator
+%
+%\begin{equation}\label{eq:newprinciple}
+% \begin{array}{c}
+%    \exists y, \;  ba(y) \sqsubseteq y\sqsubseteq a(x) \\
+%    \hline %\hline %\vspace{-0.2cm} \\
+%    \mu b \sqsubseteq a(x)
+%\end{array}
+%\end{equation}
+%Soundness is always trivial: $b(y)\sqsubseteq ab(y) \sqsubseteq y $: $y$ is a prefix point of $b$. Therefore $\nu b \sqsubseteq y \sqsubseteq a(x)$.
+%For completeness, we need the assumption that $ba \sqsubseteq ab$.  Assume that $\mu b \sqsubseteq a(x)$ and take $y = a(\mu b)$. Then $baa(\mu b) = ba(\mu b) \sqsubseteq ab(\mu b) = a(\mu b)\sqsubseteq aa(x)=a(x)$.
+%
+%\medskip
+%Now, we would like to compare the above principle with abstract interpretation. As usual $(\alpha\dashv \gamma) \colon C\to A$ is the pair of adjoint associated to $a$.
+%Moreover we fix $\overline{b} = (\gamma b \alpha)$. NOT SURE IT WORKS...
+%
+%\medskip
+
+\subsection{A principle for abstract intepretation}
+
+
+The following principle, where $x',y' \in A$, coincides with abstract interpretation.
+\begin{equation}%\label{eq:newprinciple}
+ \begin{array}{c}
+    \exists y', \;  \alpha b \gamma(y') \sqsubseteq y'\sqsubseteq x' \\
+    \hline %\hline %\vspace{-0.2cm} \\
+    \alpha(\mu b) \sqsubseteq x'
+\end{array}
+\end{equation}
+%
+We first prove that soundness of this principle holds iff $\alpha(\mu b ) \sqsubseteq \mu (\alpha b \gamma )$. We have already seen that $\alpha(\mu b ) \sqsubseteq \mu (\alpha b \gamma )$ is always true. We prove that from it, it follows the soundness of the proof principle observe that if the premises are true then $\alpha(\mu b ) \sqsubseteq \mu (\alpha b \gamma ) \sqsubseteq y' \sqsubseteq x'$.  
+
+The completeness is the interesting part. Assume that the rule is complete and take $x' = \alpha(\mu b)$. Then there exists $y'\sqsubseteq \alpha(\mu b)$ which is a prefix-point of  $\alpha b \gamma$. Therefore $\mu(\alpha b \gamma) y'\sqsubseteq  \alpha(\mu b)$. The other inclusion is always true.
+Now assume that $\mu(\alpha b \gamma) y' =  \alpha(\mu b)$ and that the conclusion of the rule holds. Therefore $ \alpha b \gamma (\mu(\alpha b \gamma))  = \mu(\alpha b \gamma)  =  \alpha(\mu b) x' $.
+
+
+
+
+
+
+%\bibliographystyle{spbasic}      % basic style, author-year citations
+\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+\bibliography{references}
+
+\clearpage
+\appendix
+%\input{appendix}
+%\input{appendix-concur}
+
+\section{More examples of up-to techniques}\label{app:moreexample}
+%
+For the convenience of the reader, we report below two further examples of coinduction up-to published by the first author somewhere else.
+
+
+\subsection{Regular Expressions and Kleene Algebra}
+\label{ssec:KA}
+%
+Beyond algorithms, up-to techniques are useful to prove different sorts
+of properties of systems specified by a given 
+syntax. Indeed, this was the original motivation for the introduction
+of up-to techniques in Milner's work on CCS~\cite{Milner89}. To keep
+the presentation simpler and, at the same time, to show to the reader
+the large spectrum of applications of up-to techniques, we consider
+\emph{regular expressions} and 
+ we provide coinductive proofs for
+ some of the axioms of Kleene Algebra~\cite{DBLP:conf/lics/Kozen91} with respect to the
+ regular language interpretation.
+%.
+%we provide coinductive proofs for the soundness of the Kleene algebra
+%axiomatisation of~\cite{DBLP:conf/lics/Kozen91} with respect to the
+%regular languages interpretation.
+
+First, recall that regular expressions are generated by the following
+grammar
+$$e::=   0 \mid 1 \mid a \mid e+e \mid e\cdot e \mid e^\star$$
+where $a$ ranges over symbols of the alphabet $A$. To make the notation
+lighter we will often avoid to write $\cdot$, so that $ef$ stands
+for $e \cdot f$. 
+
+We will prove language equivalence of regular expressions by considering bisimulations
+on an automaton having as state space the set $RE$ of regular expressions. This automaton
+is constructed using Brzozowski derivatives~\cite{DBLP:journals/jacm/Brzozowski64}.
+The following inference rules
+\[
+\inferrule*{-}{1\downarrow} \quad \quad
+\inferrule*{\darr{e}}{\darr{(e+f)}} \quad \quad
+\inferrule*{\darr{f}}{\darr{(e+f)}} \quad \quad
+\inferrule*{\darr{e} \; \\ \; \darr{f} }{\darr{(e\cdot f)}}
+\quad \quad \inferrule*{-}{\darr{e^\star}}
+\]
+define the output function $o \colon RE \rightarrow 2$ as $o(e) = 1$ iff $\darr{e}$.
+The following inference rules
+\[
+\inferrule*{-}{0\tr{a}0} \quad \quad \inferrule*{-}{1\tr{a}0} \quad
+\quad \inferrule*{-}{a\tr{a}1} \quad \quad \inferrule*{b\neq
+  a}{a\tr{b}0} \quad \quad \inferrule*{e\tr{a}e' \ \  \\ \; f\tr{a}f'
+}{e+f\tr{a}e'+f'}
+\]
+\[
+ \inferrule*{e\tr{a}e'  \ \  \\ \;  f\tr{a}f'}{ e\cdot f \tr{a}e'\cdot f + o(e) \cdot f' } \quad
+\quad \inferrule*{e\tr{a}e' }{e^\star\tr{a}e'\cdot e^\star}
+\]
+define the transition function $t\colon RE\to RE^A$ as $t(e)(a)=e'$
+iff $e\tr{a}e'$. The above presentation of Brzozowski derivatives by
+means of inference rules is unusual, but it is convenient here to
+stress the similarity with GSOS specifications~\cite{BloomCT88:GSOS}
+that will be pivotal for our development in
+Section~\ref{ssec:abstract-GSOS}.
+
+The deterministic automaton $(RE,\langle o,t\rangle)$ uniquely defines
+the map $\bb{-}\colon RE \to 2^{A^\star}$ and Kleene Algebra provides a
+sound and complete axiomatisation for $\sim$. The soundness of these
+axioms can be now proved by means of coinduction.  For instance,
+commutativity of $+$,
+$$ e+f \sim f+e$$ is simply proved by checking that the relation $R=\{(e+f,f+e) \mid e,f\in RE \}$ is a bisimulation. Indeed 
+$\darr{(e+f)} \Leftrightarrow \darr{e} \vee \darr{f} \Leftrightarrow \darr{(f+e)}$ and for all $a\in A$, 
+$$\xymatrix@C=2pt@R=3pt{
+  e+f \ar[dd]_(0.4)a & & f+e \ar[dd]^(0.4)a \\
+  \\
+  e'+f' & R & f'+e' }
+$$
+In a similar way, one can prove that $(RE,+,0)$ is a monoid,
+% $$e+(f+g)\sim (e+f) +g$$
+% $$e+0\sim e$$
+but things get trickier for distributivity, for instance on the right:
+$$e(f+g)\sim ef + eg\text{.}$$
+Indeed, let us check whether the relation $R=\{(e(f+g), ef + eg) \mid e,f,g\in RE \}$ is a bisimulation. 
+It is immediate to check that $\darr{e(f+g)} \Leftrightarrow \darr{(ef + eg)}$.
+% $ \inferrule*{e\not \downarrow \\ \quad \quad e\tr{a}e'}{e(f+g)
+% \tr{a}e'(f+g) } $ $\inferrule*{ \inferrule*{e\not \downarrow \\
+% \quad e\tr{a}e'}{ef \tr{a}e'f} \quad \\ \quad \inferrule*{e\not
+% \downarrow \\ \quad e\tr{a}e'}{eg \tr{a}%e'g}}
+% {ef+eg \tr{a}e'f+eg' } $
+However, the arriving states after a transition are not related by
+$R$, hence $R$ is not a bisimulation.
+\begin{equation}\label{probdistr}
+  \lower -15pt
+  \hbox{\xymatrix@C=2pt@R=3pt{
+      e(f+g) \ar[dd]_(0.4)a && ef + eg \ar[dd]^(0.4)a \\
+      \\
+      e'(f+g)+o(e) (f'+g') & \not \hspace{-0.1cm}R & (e'f +o(e) f') +(e'g +o(e) g')
+    }}
+\end{equation}
+% $ \inferrule*{e \downarrow \\ \quad \quad e\tr{a}e' \\ \quad \quad
+% \inferrule{f\tr{a}f' \; \\ \; g\tr{a}g'}{f+g\tr{a}f'+g'}}{e(f+g)
+% \tr{a}e'(f+g) } $ $\inferrule*{ \inferrule*{e\not \downarrow \\
+% \quad e\tr{a}e'}{ef \tr{a}e'f} \quad \\ \quad \inferrule*{e\not
+% \downarrow \\ \quad e\tr{a}e'}{eg \tr{a}e'g}} {ef+eg \tr{a}e'f+eg' }
+% $
+However, as we will see below, the relation $R$ is a \emph{bisimulation up-to} for a particular composite up-to technique. 
+Its components are the function $\Beh \colon \Rel_{RE} \to \Rel_{RE}$
+defined for all relations $R\subseteq RE^2$ as $$\Beh(R)= \{(e,f)\mid
+\exists e',f' \text{ s.t. } e \sim e' R f' \sim f \}$$ and the
+function $\Ctx\colon \Rel_{RE} \to \Rel_{RE}$ mapping every relation
+$R$ to its contextual closure $\Ctx(R)$. The latter is defined inductively
+by the following rules.
+\[
+\inferrule*{e \mathrel{R} f}{e \mathrel{\Ctx(R)} f} \quad \quad \inferrule*{-}{0 \mathrel{\Ctx(R)} 0}
+\quad \quad \inferrule*{-}{1 \mathrel{\Ctx(R)} 1}
+\]\[ \inferrule*{e \mathrel{\Ctx(R)} e' \and
+ f \mathrel{\Ctx(R)} f'}{e+f \mathrel{\Ctx(R)} e'+f' }
+\quad \quad \inferrule*{e \mathrel{\Ctx(R)} e' \and f \mathrel{\Ctx(R)} f'}{ef
+  \mathrel{\Ctx(R)} e'f' } \quad \quad \inferrule*{e \mathrel{\Ctx(R)} f }{e^\star \mathrel{\Ctx(R)} f^\star }
+\]
+Now, it is easy to see that the relation $R=\{(e(f+g), ef + eg) \mid
+e,f,g\in RE \}$ is a \emph{bisimulation up to $\Beh \circ \Ctx$}, meaning that
+$R\subseteq B ( \Beh ( \Ctx (R)))$. Indeed 
+\eqref{probdistr} is proved to hold by observing that
+$$
+  e'(f+g)+o(e)(f'+g') \mathrel{\Ctx(R)} (e'f+e'g) +(o(e)f'+o(e)g') 
+$$
+%$$\xymatrix@C=2pt@R=3pt{
+%  e(f+g) \ar[dd]_(0.4)a & & & & ef + eg \ar[dd]^(0.4)a \\
+%  \\
+%  e'(f+g)+o(e)(f'+g') & \Ctx(R) & (e'f+e'g) +(o(e)f'+o(e)g') & \sim & (e'f +o(e)f') +
+%  (e'g +o(e)g') }
+%$$
+and that $(e'f+e'g) +(o(e)f'+o(e)g') \sim (e'f +o(e)f') + (e'g +o(e)g')$ since, as
+shown above, $+$ is associative and commutative. Hence, the arriving states
+in~\eqref{probdistr} are related by $\Beh \circ \Ctx(R)$.
+
+
+\subsection{Arden's rule}\label{sec:arden}
+%\marginpar{
+%\textcolor{blue}{This section is all very nice, but I feel it's way too
+%  long}}
+As the last example of this section, we provide a coinductive proof of
+Arden's rule. This is usually formulated for arbitrary languages, but
+we rephrase it here in terms of regular expressions so to reuse the
+notation introduced so far. The coinductive proof for arbitrary
+languages is completely analogous, see~\cite{Rot15:phd}.
+
+ \medskip
+
+Arden's rule states that, given two expressions $k$ and $m$, the
+``behavioural'' equation
+ 	 $$e \sim k e+m$$ 
+	 has $e=k^\star m$ as \emph{solution}, i.e., $k^\star m \sim k k^\star m +m$.
+         Furthermore,
+	 \begin{enumerate}
+         \item[(a)] it is the \emph{smallest solution} (up to $\sim$), namely if $f \sim k f+m$ then
+           $k^\star m \precsim f$;
+         \item[(b)] if $\ndarr{k}$, then it is the \emph{unique
+             solution} (up to $\sim$), namely if $f \sim k f+m$ then
+           $k^\star m \sim f$.
+         \end{enumerate}
+         Here $\precsim$ denotes \emph{language inclusion}: $e
+         \precsim f$ iff $\bb{e}\subseteq \bb{f}$. In order to proceed
+         with a coinductive proof of Arden's rule, we
+         characterise $\precsim$ as $\nu B'$, the greatest fixed-point
+         of the monotone function $B' \colon \Rel_{RE} \to \Rel_{RE}$
+         mapping $R\subseteq RE^2$ to
+$$B'(R)=\{(e,f) \mid o(e)\leq o(f) \text{ and for all } a\in A, \, (t(e)(a), t(f)(a))\in R  \}\text{.}$$
+One can apply the Knaster-Tarski fixed point theorem to $B'$ so to
+obtain the analogue of \eqref{eq:coinductionproofprinciple} which
+allows to prove $e \precsim f$ by showing a relation $R$ such that
+$\{(e,f)\}\subseteq R$ and $R$ is a \emph{simulation}, i.e.,
+$R\subseteq B'(R)$.
+
+
+\medskip
+
+The proof proceeds as follows.
+First observe that $k^\star m$ is indeed a solution since $k^\star m \sim (k k^\star 
++ 1) m \sim kk^\star m + m$. 
+For (a), we prove that $S = \{(k^\star m,f)\}$ is a \emph{simulation up-to}. 
+For the outputs, $\darr{k^\star m} \Rightarrow \darr{m} \Rightarrow \darr{(kf+m)}
+\Rightarrow \darr{f} $ where the last implication follows from $f
+\sim k f+m$.  For every $a\in A$, we have
+\begin{equation}\label{probcaseArden}
+	{\small
+  \lower -15pt \hbox{\xymatrix@C=0.01pt@R=3pt{
+      k^\star m\ar[dd]^(0.4)a &&&&&&&& f \ar[dd]_(0.4)a \\
+      \\
+      (k'k^\star )m + 1 \cdot m' 
+      & \sim & k'(k^\star m) + m'  & \Ctx(S) & k'f+ m' & \precsim & (k'f+o(k)f')+m' & \sim & f'
+    }}}
+\end{equation}
+where the leftmost transition is derived as on the left below and
+$(k'f+o(k) f')+m' \sim f'$ follows from $kf+m\sim f$ and the transition
+derived on the right below.
+\[
+\inferrule*[leftskip=2em,rightskip=2em]{
+ \inferrule*{k\tr{a}k'}{k^\star \tr{a}k'k^\star } \\ \quad \quad
+  m\tr{a}m'} {k^\star m \tr{a}k'k^\star m+1 \cdot m' } \quad \quad \quad \quad \quad
+\quad \quad \quad \quad \quad %\quad \quad \quad \quad
+\inferrule*[leftskip=2em,rightskip=2em]{ \inferrule*{
+ k\tr{a}k' \\ \quad \quad f \tr{a}f'}{kf \tr{a}k'f+o(k)f'}
+  \\ \quad \quad m\tr{a}m'} {kf+m \tr{a}(k'f+o(k)f')+m' }
+\]
+Observe that $S$ is not a simulation up to $\Beh \circ \Ctx$, since in
+\eqref{probcaseArden} it is necessary to use $\precsim$.  We have to use a
+further up-to technique $\Slf\colon \Rel_{RE} \to \Rel_{RE}$ defined
+for all $R$ as
+$$\Slf(R)= \{(e,f)\mid \exists e',f' \text{ s.t. } e \precsim e' \mathrel{R} f' \precsim f \}\text{.}$$
+Since $k'f+m' \precsim (k'f+o(k)f')+m' \sim f'$, then $k'f+m' \precsim f'$
+and therefore $S$ is a \emph{simulation up to $\Slf \circ \Ctx$},
+i.e., $S\subseteq B'( \Slf ( \Ctx (S)))$.
+
+
+For (b), we assume $\ndarr{k}$ and $f \sim k f+m$, and we show that $R = \{(k^\star m,f)\}$ is a bisimulation
+up to $\Beh \circ \Ctx$.  For the outputs, since $\darr{k^\star }$,
+$\ndarr{k}$ and $f\sim kf+m$, we have $\darr{k^\star m}
+\Leftrightarrow \darr{m} \Leftrightarrow \darr{(kf+m)}
+\Leftrightarrow \darr{f} $.  
+For every $a\in A$, the transitions are the same as in~\eqref{probcaseArden},
+and the proof that the arriving states are related by $\Beh \circ \Ctx(S)$ is similar.
+The only difference is that the step $k'f+ m' \precsim (k'f+o(k)f')+m'$
+is replaced by  $k'f+ m' \sim (k'f+o(k)f')+m'$, which is valid since $\ndarr{k}$ by assumption.
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% Local IspellDict: british
+%%% TeX-master: t
+%%% End: 

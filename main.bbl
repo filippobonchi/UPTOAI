@@ -1,0 +1,41 @@
+\newcommand{\noopsort}[1]{}
+\begin{thebibliography}{1}
+
+\bibitem{bp:popl13:hkc}
+F.~Bonchi and D.~Pous.
+\newblock Checking {NFA} equivalence with bisimu\-la\-tions up to congruence.
+\newblock In {\em POPL}, pages 457--468. ACM, 2013.
+
+\bibitem{cousot1979systematic}
+Patrick Cousot and Radhia Cousot.
+\newblock Systematic design of program analysis frameworks.
+\newblock In {\em Proceedings of the 6th ACM SIGACT-SIGPLAN symposium on
+  Principles of programming languages}, pages 269--282. ACM, 1979.
+
+\bibitem{davey_priestley_2002}
+B.~A. Davey and H.~A. Priestley.
+\newblock {\em Introduction to Lattices and Order}.
+\newblock Cambridge University Press, 2 edition, 2002.
+
+\bibitem{HopcroftKarp}
+J.~E. Hopcroft and R.~M. Karp.
+\newblock A linear algorithm for testing equivalence of finite automata.
+\newblock Technical Report 114, Cornell Univ., December 1971.
+
+\bibitem{hopcroft1971n}
+John Hopcroft.
+\newblock An n log n algorithm for minimizing states in a finite automaton.
+\newblock Technical report, STANFORD UNIV CALIF DEPT OF COMPUTER SCIENCE, 1971.
+
+\bibitem{DBLP:journals/tcs/Klin11}
+B.~Klin.
+\newblock Bialgebras for structural operational semantics: An introduction.
+\newblock {\em TCS}, 412(38):5043--5069, 2011.
+
+\bibitem{turi1997towards}
+Daniele Turi and Gordon Plotkin.
+\newblock Towards a mathematical operational semantics.
+\newblock In {\em Logic in Computer Science, 1997. LICS'97. Proceedings., 12th
+  Annual IEEE Symposium on}, pages 280--291. IEEE, 1997.
+
+\end{thebibliography}
