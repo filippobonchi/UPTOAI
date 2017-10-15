@@ -288,10 +288,10 @@ Coinduction allows to prove $i\sqsubseteq \nu b$ for a given map $b \colon C \to
 Observe that, according to the above definition an up-to technique $a$ might not be \emph{complete}: it may exist an $i$ such that $i \sqsubseteq \nu b$ for which there is no $x$ satisfying  $i \sqsubseteq x\sqsubseteq ba(x)$. However, if $a$ is an up-closure operator, then $\nu b  \sqsubseteq a(\nu b)$ and using monotonicity of $b$, one obtains that 
 $i \sqsubseteq \nu b = b(\nu b) \sqsubseteq b(a (\nu b))$. The question of completeness for up-to techniques has never been raised because they have always been considered up-closure operators (e.g., up-to equivalence, up-to congruence). The main reason for considering arbitrary monotone maps rather than just up-closure operators, comes from the fact that the former allows for more modular proofs of their soundness. This is discussed in more details in Section \ref{sec:mod}.
 \end{remark}
-
-\begin{todo} 
-Check whether in the original work of Milner up to techniques are defined as closure operators or monotone maps. 
-\end{todo}
+%
+%\begin{todo} 
+%Check whether in the original work of Milner up to techniques are defined as closure operators or monotone maps. 
+%\end{todo}
 
 
 
@@ -371,7 +371,8 @@ $\alpha(\mu b) = \mu \overline{b}$.
 %Observe that, while soundness is equivalent to $\mu b \sqsubseteq_A \gamma (\mu \overline{b})$, completeness does \emph{not} coincide with  $\mu b = \gamma (\mu \overline{b})$.
 
 \begin{proposition}\label{prop:alwayssound}[\cite{cousot1979systematic}, Corollary 7.2.0.4]
-Let $b,a\colon C \to C$ be a monotone map and a closure operator. The map $\overline{b}^a = \alpha \circ b \circ \gamma $ is \emph{the best sound approximation}, that is: (1) $\overline{b}^a$ is sound and (2) if there exists a complete $\overline{b}$, then $\mu \overline{b} = \mu \overline{b}^a$.
+Let $b,a\colon C \to C$ be a monotone map and a closure operator. \marginpar{Is the assumption of Scott continuity necessary? In the paper Cousit say something about isotony but I cannot really understand}
+The map $\overline{b}^a = \alpha \circ b \circ \gamma $ is \emph{the best sound approximation}, that is: (1) $\overline{b}^a$ is sound and (2) if there exists a complete $\overline{b}$, then $\mu \overline{b} = \mu \overline{b}^a$.
 \end{proposition}
 %$$\xymatrix@R=0.2cm@C=0.2cm{A \ar[rr]^{\overline{b}} \ar[dd]_\gamma  & & A\\ 
 %& \\
@@ -380,10 +381,10 @@ Let $b,a\colon C \to C$ be a monotone map and a closure operator. The map $\over
 %\begin{proof}
 %It holds that $b\gamma (\mu \overline{b}) \sqsubseteq_C \gamma \alpha b\gamma (\mu \overline{b}) = \gamma (\mu \overline{b})$ which, by \eqref{eq:coinductionproofprinciple}, entails that $\mu b \sqsubseteq_C \gamma (\mu \overline{b})$, that is \alpha (\mu b) \sqsubseteq_A\mu \overline{b}$.
 %\end{proof}
-The above proposition allows to study completeness as a property of the abstract domain rather than of the approximation $\overline{b}$. In this perspective, the initial data for abstract interpretation are the same of those for coinduction up-to: a monotone map $b$ and a up-closure $a$. But, while for up-to technique soundness should be proved and completeness is given, here the situation is reversed: soundness is given and completeness should be proved. In Section \ref{}, we will see that the problems of proving soundness of up-to techniques and completeness of abstract domains are intimately related. We first show an example of abstract interpretation at work.
+The above proposition allows to study soundness and completeness as a property of the abstract domain rather than of the approximation $\overline{b}$: a domain $a$ is said to be \emph{sound} ( resp. \emph{complete}) iff $\overline{b}^a$ is sound (complete). In this sense, the initial data for abstract interpretation are the same of those for coinduction up-to: a monotone map $b$ and a up-closure $a$. But, while for up-to technique soundness should be proved and completeness is given, here the situation is reversed: soundness is given and completeness should be proved. In Section \ref{}, we will see that the problems of proving soundness of up-to techniques and completeness of abstract domains are intimately related. We first show an example of abstract interpretation at work.
 
 
-\subsection{Abstract Interpretation of a toy program}
+\subsection{Abstract Interpretation of a toy program}\label{ssec:AItoy}
 %
 %By using abstract interpretation, one can reduce the size of the chain in  \eqref{eq:lfpcomp}. 
 Consider the abstract domain of signs $\Sign_Z$ depicted on the left below, with right adjoint $\gamma\colon \Sign_Z \to \Pred_Z$ defined as on the right below. 
@@ -418,188 +419,130 @@ $$
 %< \!0 \ar@{-}[u] \ar@{-}[ur]  & 0 \ar@{-}[ur]\ar@{-}[ul]& > \!0 \ar@{-}[ul]  \ar@{-}[u]\\
 %& \emptyset \ar@{-}[ur] \ar@{-}[ul] \ar@{-}[u]
 % }$$
-For $b$ defined as in \eqref{eq:babstractInt}, its best sound approximation is $\overline{b}^a(P)=  > \!0 \sqcup ((P\sqcap >\!0)\overline{\ominus\!1}^a)$ where $\overline{\ominus \!1}^a$ is again defined as $\alpha \circ \ominus \!1 \circ \gamma$, e.g.,  $\overline{\ominus \!1^a}(<\!0)= \leq \!0$. The computation of $\mu \overline{b}$ is shorter than the one of $\mu b$ in \eqref{eq:lfpcomp}:
+For $b$ defined as in \eqref{eq:babstractInt}, its best sound approximation is $\overline{b}^a(P)=  > \!0 \sqcup ((P\sqcap >\!0)\overline{\ominus\!1}^a)$ where $\overline{\ominus \!1}^a$ is again defined as $\alpha \circ \ominus \!1 \circ \gamma$, e.g.,  $\overline{\ominus \!1^a}(>\!0)= \geq \!0$. The computation of $\mu \overline{b}$ is shorter than the one of $\mu b$ in \eqref{eq:lfpcomp}:
 $\emptyset \; \sqsubseteq\; >\!0 \;\sqsubseteq\; \geq\! 0 \;\sqsubseteq \; \geq\! 0$. Observe that $\gamma (\mu \overline{b}) \subseteq [0,\infty)$. Since $\overline{b}^a$ is sound, we can conclude that $\mu b \subseteq [0,\infty)$.
 
 Consider now the modified $b'$: $\overline{b'}^a(P)=  < \!0 \sqcup ((P\sqcap >\!0)\overline{\ominus\! 1})$. While the computation of $\mu b'$ diverges the one of $\mu \overline{b'}^a$ converges: $\emptyset \; \sqsubseteq \; < \!0 \; \sqsubseteq \; < \!0$. Observe that $\gamma (\mu \overline{b'}) \not \subseteq [0,\infty)$. Since $\overline{b'}$ is complete, as we will show in Section \ref{}, we can conclude that $\mu b' \not \subseteq [0,\infty)$.
 
-\section{Backward completeness}
+\section{Proving soundness and completeness}
 %
-Proving completeness of an abstract domain is usually rather complicated. In order to simplify these proofs, Cousot introduced in \cite{} the notion of full-completeness, which we will refer hereafter as backward completeness. An up-closure $a\colon C\to C$ is \emph{backward complete} w.r.t. $b\colon C\to C$ iff
-\begin{equation}
-ab = aba
-\end{equation}
+In order to prove soundness of up-to techniques and completeness of abstract domains, there have been introduced sufficient conditions, that are of central interest for our work. Both for up-to techniques and abstract domains, these conditions enjoy several equivalent formulations which we report in the following lemma.
 
-\begin{lemma}
+\begin{lemma}\label{lemma:equivalentformulation}
 Let $b\colon C\to C$ be a monotone map and $a\colon C\to C$ an up-colure operator with $(\alpha \dashv \gamma)\colon C \to A$ as associated pair of adjoints. 
-%
-The followings are equivalent
+
+\noindent The followings are equivalent
+
+\begin{minipage}{0.7\textwidth}
 \begin{enumerate}
-\item $a$ is backward complete w.r.t. $b$: $ab = aba$;
-\item there exists a Kleisli law: $ba \sqsubseteq ab$;
-\item there exists a Kleisli extension $\overline{b}\colon A \to A$: $\overline{b} \alpha = \alpha b$.
-$$\xymatrix@R=0.2cm@C=0.2cm{A \ar[rr]^{\overline{b}} & & A\\ 
-&  \\
-C \ar[rr]_b \ar[uu]^\alpha & &  C \ar[uu]_\alpha
-}$$
-\end{enumerate}
-\end{lemma}
-\begin{proof}
-The proof is trivial. We report it just for the sake of completeness.
-($1\Rightarrow 2$) $ab = aba \sqsupseteq ba$ since $a$ is an up-closure. ($2\Rightarrow 3$) It always holds $(\alpha b \gamma) \alpha \sqsupseteq \alpha b$. For the other inclusion, observe that if $ba \sqsubseteq ab$, then $b\gamma \alpha \sqsubseteq \gamma \alpha b$ and  $\alpha b\gamma \alpha \sqsubseteq \alpha \gamma \alpha b \sqsubseteq \alpha b$.
-($3 \Rightarrow 1$) Since $(\alpha b \gamma) \alpha = \alpha b$, then $\gamma (\alpha b \gamma) \alpha = \gamma\alpha b$, that is $aba = ab$.
-\end{proof}
-%
-\begin{proposition}[From Cousot POPL 1977 \cite{}]\label{prop:Cousot}
-Let $b\colon C\to C$ be a Scott-continuous map and $a\colon C\to C$ an up-closure operator. 
-If $a$ is backward complete, then it is complete. 
-\end{proposition}
-\begin{proof} 
-The assumption of Scott-continuity is necessary to characterise 
-%
-$$\alpha(\mu b) = \alpha (\bigsqcup_{n} b^n(\bot_C) ) \qquad \text{ and } \qquad \mu(\alpha b \gamma) =  \bigsqcup_{n} (\alpha b \gamma)^n(\bot_A) \text{.}$$ 
-Since $\alpha$ is a left adjoint we have that the leftmost is equivalent to  $ (\bigsqcup_{n}  \alpha b^n(\bot_C) $.
-
-By induction on $n$, we prove that $\alpha b^n(\bot_C) = (\alpha b \gamma)^n (\bot_A)$.
-\begin{itemize}
-\item For $n=0$, $\alpha(\bot_C) = \bot_A$;
-\item For $n+1$, we have that $\alpha b \gamma (\alpha b \gamma)^n (\bot_A) = \alpha b\gamma \alpha b^n (\bot_C)$ by induction hypothesis. Using the property of Kleisli lifting, the latter is equivalent to $\alpha b b^n (\bot_C) = \alpha b^{n+1}(\bot_C)$.
-\end{itemize}
-\end{proof}
-\begin{todo}
-Carefully compare with the proof of Cousot.
-\end{todo}
-
-\begin{question}
-Is there a nicer proof which does not use the assumption of Scott continuity?
-\end{question}
-
-
-
-\section{Forward completeness and compatible techniques}\label{sec:comp}
-
-Another condition, which is called in \cite{} forward completeness, plays a crucial role for our exposition. An up-closure $a\colon C\to C$ is \emph{backward complete} w.r.t. $b\colon C\to C$ iff
-\begin{equation}
-ba = aba
-\end{equation}
-
-
-\begin{lemma}
-Let $b\colon C\to C$ be a monotone map and $a\colon C\to C$ an up-colure operator with $(\alpha \dashv \gamma)\colon C \to A$ as associated pair of adjoints. 
-%
-The followings are equivalent
-\begin{enumerate}
-\item $a$ is forward complete w.r.t. $b$, i.e., $ba = aba$;
-\item there exists a EM law, i.e., $ab \sqsubseteq ba$;
-\item there exists a EM lifting $\overline{b}\colon A \to A$, i.e., $\gamma \overline{b} =  b \gamma$.
+\item $ba = aba$;
+\item $ab \sqsubseteq ba$ (EM law);
+\item there exists a  $\overline{b}\colon A \to A$ s.t.  $\gamma \overline{b} =  b \gamma$ (EM lifting).
+\end{enumerate}\end{minipage}
+\begin{minipage}{0.3\textwidth}
 $$\xymatrix@R=0.2cm@C=0.2cm{
 A \ar[rr]^{\overline{b}} \ar[dd]_\gamma & & A  \ar[dd]^\gamma \\ 
 &  \\
 C \ar[rr]_b & &  C 
 }$$
-\end{enumerate}
+\end{minipage}
+
+
+\noindent The followings are equivalent
+
+\begin{minipage}{0.7\textwidth}
+\begin{enumerate}
+\item $ab = aba$;
+\item $ba \sqsubseteq ab$ (Kl law);
+\item there exists a $\overline{b}\colon A \to A$ s.t. $\overline{b} \alpha = \alpha b$ (Kl extension).
+\end{enumerate}\end{minipage}
+\begin{minipage}{0.3\textwidth}
+$$\xymatrix@R=0.2cm@C=0.2cm{A \ar[rr]^{\overline{b}} & & A\\ 
+&  \\
+C \ar[rr]_b \ar[uu]^\alpha & &  C \ar[uu]_\alpha
+}$$
+\end{minipage}
 \end{lemma}
-\begin{proof}
-The proof is trivial. We report it just for the sake of completeness.
-($1\Rightarrow 2$) Since $b\circ a = a\circ b\circ a$ then $b\circ a = a\circ b\circ a \sqsupseteq a\circ b$. 
+These facts are well known and appear in different places in literature: the reader can conveniently find a proof in Appendix \ref{app:proof}. If $a$ enjoys the properties in the first part of Lemma \ref{lemma:equivalentformulation}, it is said to be \emph{compatible} w.r.t. $b$, if it enjoys the properties in the second part is said \emph{fully complete} (w.r.t. $b$). Compatibility entails soundness for up-to techniques, while full completeness entails completeness for abstract domains.
 %
-($2\Rightarrow 1$) Since $a\circ b \sqsubseteq b\circ a$, then $a\circ b \circ a \sqsubseteq b\circ a \circ a \sqsubseteq b \circ a$. The other inclusion, $b\circ a \subseteq  a\circ b\circ a$, holds since $a$ is an up-closure.
 %
- ($2\Rightarrow 3$) Observe that $A=Pre(a)$ by construction. For every pre fixed-point $a(x)\sqsubseteq x$, it holds that $ab(x) \sqsubseteq ba(x)\sqsubseteq b(x)$, namely $b(x)$ is a pre fixed-point. One can therefore define $\overline{b}(x) = b(x)$. The fact that $\gamma \overline{b} =  b \gamma$ follows immediately by construction of $\gamma$. 
- %
- ($3 \Rightarrow 2$) By construction of $\gamma$, for every pre fixed point $x$, $b(x)$ is forced to be a pre fixed-point of $a$: $ab(x)\sqsubseteq b(x)$. Therefore  $ab(x)\sqsubseteq b(x) \sqsubseteq ba(x)$.
-\end{proof}
+\begin{theorem}[\cite{PS12}, Theorem 3.6.9]\label{prop:compatible}
+If $a$ is compatible w.r.t. $b$, then it is sound w.r.t. $b$.
+\end{theorem}
 %
-\begin{remark}
-From the proof of the above lemma, one can see that the assumption of $a$ being a up-closure operator is necessary only for  the first point. The correspondence of the last two points holds also when $a$ is not a closure operator: in this case, $A$ is the lattice of pre fixed-point of $a$ and $\gamma$ the obvious injection of $A$ in $C$. In this case, its left adjoint $\alpha$ does not exist.
-\end{remark}
-
-\begin{proposition}
-Let $a,b\colon C\to C$ be two monotone maps so that $a$ is backward complete w.r.t. $b$. Let $\overline{b}\colon A \to A$ be the corresponding EM lifting. Then $\gamma(\nu {\overline{b}}) = \nu b$.
-\end{proposition}
-\begin{proof}
-Recall that $A = Pre(a)$. By the Knaster-Tarski fixed-point theorem  $\gamma(\nu {\overline{b}}) =  \bigsqcup \{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \}$ and  $\nu b = \bigsqcup \{ x  \mid x \sqsubseteq b(x) \}$. Since $\{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \} \subseteq \{ x  \mid x \sqsubseteq b(x) \}$, then $\gamma(\nu {\overline{b}}) \sqsubseteq \nu b$.
-Observe that $a(\nu b) = ab(\nu b)\sqsubseteq ba(\nu b)$, namely $a(\nu b)$ is a post fixed-point of $b$. Therefore $a(\nu b) \sqsubseteq \nu b \sqsubseteq b(\nu b)$, which means $\nu b \in \{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \}$. This proves that $\nu b \sqsubseteq \gamma(\nu {\overline{b}})$.
-\end{proof}
-
-
+\begin{theorem}[\cite{cousot1979systematic}, Theorem 7.1.0.4]\label{prop:Cousot} 
+%Let $b\colon C\to C$ be a Scott-continuous map and $a\colon C\to C$ an up-closure operator.  
+If $a$ is fully complete w.r.t. $b$, then it is complete w.r.t. $b$. 
+\marginpar{Is the assumption of Scott continuity necessary? In the paper Cousit say something about isotony but I cannot really understand}
+\end{theorem}
 %
-%if $f$ is an up-closure the two concepts coincide
-%\begin{equation}f\circ b \sqsubseteq b\circ  f \text{ iff } b\circ f = f\circ b\circ f\end{equation}
-%\begin{proof}
-%Assume $f\circ b \sqsubseteq b\circ f$: then $f\circ b \circ f \sqsubseteq b\circ f \circ f \sqsubseteq bf$.
-%For the other direction, since $b\circ f = f\circ b\circ f$ then $b\circ f = f\circ b\circ f \sqsupseteq f\circ b$.
-%\end{proof}
+It is important to remark here that both theorems state sufficient conditions that are not, in general, necessary. Indeed, both soundness and completeness require certain correspondences at the fixed points, that can happen to hold even when there is no step-wise correspondences between $b$ and $a$. The name fully complete suggests indeed that the correspondence should hold at any step of the computations of $\mu b$ and $\mu \overline{b}$. The name \emph{compatibility}, instead have been introduced for up-to techniques to emphasise that these can be composed resulting in further compatible techniques.
 
-Exactly the same condition of backward completeness has been introduced also for up-to techniques, under the name of compatibility. An up-to technique $a\colon C\to C$ is said to be \emph{compatible} w.r.t. $b$ iff 
-$$ab \sqsubseteq ba$$ 
-Observe that this is just the definition of EM-law and, therefore, when $a$ is an up-closure coincides exactly with backward completeness.
-
-Like forward completeness entails completeness for abstract interpretation, compatibility entails soundness for up-to techniques.
-
-\begin{proposition}\label{prop:compatible}
-Let $a$ be compatible w.r.t. $b$. Then $a$ is sound w.r.t. $b$.
-\end{proposition}
-\begin{proof} 
-For each $y\sqsubseteq ba(y)$, $a(y)\sqsubseteq aba(y) \sqsubseteq baa(y) \sqsubseteq ba(y)$. Therefore $a(y)\sqsubseteq \nu b$. If $x\sqsubseteq y$, then $x\sqsubseteq a(y)\sqsubseteq \nu b$.
-\end{proof}
-Backward completeness instead does not entail (fixpoint) completeness for abstract interpretation. We will discuss this further in Section \ref{}.
-
-
-
-
-
-\section{Modularity}\label{sec:mod}
-%
-Before focusing on our (so far) main achievement, we make a short detour, explaining one of the side result of our comparison.
-
-We have seen that up-to techniques are morally up-closure, but they are usually defined as monotone maps. The reason for this definition is that one can define operations on functions, in a much straightforward way, e.g., both $f\sqcup g$ and $f\sqcap g$ are defined pointwise for all maps $f,g\colon C \to C$, while the pointwise joint of two up-closures is not necessarily an up-closure. The following proposition allows to make modular proof of compatibility or, in term of abstract interpretation, backward completeness.
-
+%We have seen that up-to techniques are morally up-closure, but they are usually defined as monotone maps. The reason for this definition is that one can define operations on functions, in a much straightforward way, e.g., both $f\sqcup g$ and $f\sqcap g$ are defined pointwise for all maps $f,g\colon C \to C$, while the pointwise joint of two up-closures is not necessarily an up-closure. The following proposition allows to make modular proof of compatibility or, in term of abstract interpretation, backward completeness.
 
 \begin{proposition}[modularity]\label{prop:mod}
-Let $a,b,a_1,a_2,b_1,b_2\colon C\to C$ be monotone maps on some complete lattice $C$. 
+Let $g,h,g_1,g_2,h_1,h_2\colon C\to C$ be monotone maps on some complete lattice $C$. 
 Then:
 \begin{enumerate}
-\item[1.] $id \circ b \sqsubseteq b \circ id$;
-\item[2.] if  $a_1 \circ b \sqsubseteq b \circ a_1$ and $a_2 \circ b \sqsubseteq b \circ a_2$, then $(a_1 \circ a_2) \circ b \sqsubseteq b \circ (a_1 \circ a_2)$.
+\item[1.] $id \circ h \sqsubseteq h \circ id$;
+\item[2.] if  $g_1 \circ h \sqsubseteq h \circ g_1$ and $g_2 \circ h \sqsubseteq h \circ g_2$, then $(g_1 \circ g_2) \circ h \sqsubseteq h \circ (g_1 \circ g_2)$.
 \end{enumerate}
 Moreover:
 \begin{enumerate}
-\item[3.] if  $a_1 \circ b \sqsubseteq b \circ a_1$ and $a_2 \circ b \sqsubseteq b \circ a_2$, then $(a_1 \sqcup a_2) \circ b \sqsubseteq b \circ (a_1 \sqcup a_2)$;
-\item[4.] if  $a \circ b \sqsubseteq b \circ a$, then $a^\uparrow \circ b \sqsubseteq b \circ a^\uparrow$.
+\item[3.] if  $g_1 \circ h \sqsubseteq h \circ g_1$ and $g_2 \circ h \sqsubseteq h \circ g_2$, then $(g_1 \sqcup g_2) \circ h \sqsubseteq h \circ (g_1 \sqcup g_2)$;
+\item[4.] if  $g \circ h \sqsubseteq h \circ g$, then $g^\uparrow \circ h \sqsubseteq h \circ g^\uparrow$.
 \end{enumerate}
 Dually:
 \begin{enumerate}
-\item[5.] if  $a \circ b_1 \sqsubseteq b_1 \circ a$ and $a \circ b_2 \sqsubseteq b_2 \circ a$, then $a\circ  (b_1 \sqcap  b_2) \sqsubseteq (b_1 \sqcap b_2) \circ a$;
-\item[6.] if  $a \circ b \sqsubseteq b \circ a$, then $a \circ b^\downarrow \sqsubseteq b^\downarrow \circ a$.
+\item[5.] if  $g \circ h_1 \sqsubseteq h_1 \circ g$ and $g \circ h_2 \sqsubseteq h_2 \circ g$, then $g\circ  (h_1 \sqcap  h_2) \sqsubseteq (h_1 \sqcap h_2) \circ g$;
+\item[6.] if  $g \circ h \sqsubseteq h \circ g$, then $g \circ h^\downarrow \sqsubseteq h^\downarrow \circ g$.
 \end{enumerate}
 \end{proposition}
-\begin{todo}
+\begin{proof}
 The proof is simple but should be written down.
-\end{todo}
+\end{proof}
 
-This proposition has been exploited extensively for up-to techniques. We illustrates its importance below.
+\begin{remark}
+Observe that, by point $4.$ of Proposition \ref{prop:mod}, one can always obtain an up-closure operator. For instance suppose to have two up-closure operator $a_1$ and $a_2$ that are both forward complete. \marginpar{to be rewritten and understood: maybe remove} Then $a_1 \sqcup a_2$ is still forward complete, but it is not an up-closure. To have an up-closure, one takes $(a_1\sqcup a_2)^\uparrow$ which is ensured to be forward complete by points $3.$ and $4.$ of Proposition \ref{prop:mod}.
+\end{remark}
+
+\begin{remark}
+HISTORICAL EXPLANATION
+\end{remark}
 
  
- \subsection{Back to Hopcroft and Karp: proving soundness of equivalence closure.}\label{sec:HKsoundness}
+ \subsection{Proving soundness of equivalence closure}\label{sec:HKsoundness}
  Recall the monotone map $b\colon \Rel_X \to \Rel_X$ defined in \eqref{eq:functional-bisim-da} and the up-closure $e\colon \Rel_X \to \Rel_X$ introduced in Section \ref{ssec:HK}.
  In order to prove that the Hopcroft and Karp algorithm is sound one has to relies on the fact that $e$ is sound w.r.t. $b$. 
- Thanks to Proposition \ref{prop:compatible}, one can prove soundness by showing that $e$ is compatible w.r.t. $b$. The proof of compatibility can be simplified by mean of Proposition \ref{prop:mod}.
+ Thanks to Theorem \ref{prop:compatible}, one can prove soundness by showing that $e$ is compatible w.r.t. $b$. The proof of compatibility can be simplified by using its formulation in point 2 of Lemma \ref{lemma:equivalentformulation} and Proposition \ref{prop:mod}.
 
-For every relation $R\subseteq X\times X$, define  $r,s,t\colon \Rel_X \to \Rel_X$ as follows.
+The map $b$ can be decomposed as $b = b_* \sqcap f$ where $b_*,f \colon \Rel_X\to  \Rel_X$ are defined for all relations $R$ as
+\begin{equation}
+\begin{array}{rcl}
+b_*(R) & =& \{(x,y) \mid \text{ for all } a\in A, \, (t(x)(a), t(y)(a))\in R  \} \\ 
+f(R) & = & \{(x_1,x_2)  \mid o(x_1)=o(x_2) \}
+\end{array}
+\end{equation}
+and the equivalence closure as $e= (id\sqcup r \sqcup s \sqcup t )^\uparrow$ where 
+$r,s,t\colon \Rel_X \to \Rel_X$ are defined as follows.
 $$r(R) = \{(x,x)\mid x\in X \} \qquad s(R)=\{(y,x)\mid (x,y)\in R\}$$ 
 $$t(R)=\{(x,z) \mid \exists y \text{ s.t. } (x,y) \in R \text{ and } (y,z)\in R\} $$
-Observe that $r$ is a constant function, mapping every relation into the identity relation. Intuitively $r\sqcup id$ is the reflexive closure. 
-Similarly $s$ maps a relation $R$ into ints inverse $R^{-1}$: again $s \sqcup id$ is the symmetric closure. The function $t$ is called the squaring function: to obtain the transitive closure one has to take $t^\uparrow$. Now, the equivalence closure can be decomposed as 
-$$e= (id\sqcup r \sqcup s \sqcup t )^\uparrow$$
-In order to prove compatibility of $e$, it is enough to prove, thank to Proposition \ref{prop:mod}, compatibility of the much simpler functions $r,s,t$. We leave this simple task to the reader.
 
-\begin{remark}[Modularity for forward completeness]
-As the notions of forward completeness and compatibility coincide, one can use Proposition \ref{prop:mod} also for making modular proofs of forward completeness. Observe that, by point $4.$ of Proposition \ref{prop:mod}, one can always obtain an up-closure operator. For instance suppose to have two up-closure operator $a_1$ and $a_2$ that are both forward complete. Then $a_1 \sqcup a_2$ is still forward complete, but it is not an up-closure. To have an up-closure, one takes $(a_1\sqcup a_2)^\uparrow$ which is ensured to be forward complete by points $3.$ and $4.$ of Proposition \ref{prop:mod}.
-\end{remark}
-\begin{todo}
-Modularity for forward completeness for abstract domains has been studied quite a lot. We should check whether this new perspective really brings something interesting.
-\end{todo}
+The proof of  compatibility of $e$ w.r.t. $b$ can be decomposed by compatibility of $e$ w.r.t. $b_*$ and $f$ and then use Proposition  \ref{prop:mod}.5. Furthermore, to prove that $e$ is compatible w.r.t. $b_*$, one can prove that $r,s,t$ are compatible w.r.t. $b_*$ and then use points 1,3 and 4 of Proposition  \ref{prop:mod}. For $f$, it is immediate to check that $ef\subseteq f$. 
+
+\subsection{Proving completeness of the domain of signs}
+Call $s$ the up-closure associated with the domain of signs introduced in Section \ref{ssec:AItoy} and recall $b\colon \Pred_Z \to \Pred_Z$ defined in \eqref{eq:babstractInt}. Thanks to Theorem \ref{prop:Cousot}, one can prove $s$ is complete w.r.t. $b$, by showing that it is fully complete. The proof of full completness can be simplified by using its formulation in point 2 of Lemma \ref{lemma:equivalentformulation} and Proposition \ref{prop:mod}. Note that while for up-to techniques the map $b$ plays the role of $h,h_1,h_2$ in Proposition \ref{prop:mod}, for abstract domains, $b$ ranges over $g,g_1,g_2$.
+
+The map $b$ can be decomposed as $b=i \cup b^*$ where $i,b^* \colon \Rel_X\to  \Rel_X$ are defined for all predicates $P$ as follows.
+\begin{equation}
+\begin{array}{rcl}
+i(P) & = & \{ 5 \}\\
+b^*(P) & =& (P\cap [1,\infty) ) \ominus\! 1 
+\end{array}
+\end{equation}
+To prove that $s$ is fully complete w.r.t. $b$, one can prove that it is fully complete w.r.t. $i$ and $b^*$ and then use Proposition \ref{prop:mod}. For $i$, it is enough to observe that any abstract domain $a$ is fully complete with any constant function $c$ (that is $c\sqsubseteq a(c)$). Instead $b^*$ can be further decomposed as $b^*= \ominus\!1 \circ (id\cap [1,\infty)) $
+
+NO IT DOES NOT WORK: IT IS NOT TRUE THAT $s$ is fully complete w.r.t. $b$,
 
 \section{Relating Abstract Interpretation and Coinduction up-to by adjointness}
 To relate abstract interpretation and coinduction up-to we need to assume that the monotone map $b\colon C\to C$ is part of an adjunction.
@@ -643,9 +586,6 @@ $a$ is forward complete w.r.t. $b^*\sqcup i $ and $a$ is backward complete w.r.t
 \begin{remark}
 Apparently, we do not have an iff between the conditions of $a$ is forward complete w.r.t. $b^*\sqcup i $ and $a$ is backward complete w.r.t. $b_* \sqcup f$.
 \end{remark}
-\begin{todo}
-Please check carefully the iff in the remark.
-\end{todo}
 
 
 
@@ -677,13 +617,10 @@ We have shown that the righmost inclusion can be checked using coinduction up-to
 Unfortunately here, we cannot say that the fact that $e$ is compatible w.r.t. $b=(b_*\cap f)$ entails that $e$ is compatible w.r.t. $b_*$. the other implication hold, but not this one. Indeed: 
 $$e(b_*\cap f) \subseteq (b_*\cap f) e \text{ iff } eb_* \cap ef \subseteq b_* e \cap f \text{ iff }  eb_* \cap ef \subseteq b_* e \text{ and }  eb_* \cap ef \subseteq  f\text{.}$$
 \end{remark}
-\begin{todo}
-Understand this remark better.
-\end{todo}
 
-\begin{todo}
-The problem in the remark above can be done more smooth by using a different proof strategy. We decompose $b = b=(b_*\cap f)$ already in Section \ref{sec:HKsoundness} and we use modularity w.r.t. $\cap$ to prove compatibility of $e$. This would look more natural in a final version of the paper.
-\end{todo}
+%\begin{todo}
+%The problem in the remark above can be done more smooth by using a different proof strategy. We decompose $b = b=(b_*\cap f)$ already in Section \ref{sec:HKsoundness} and we use modularity w.r.t. $\cap$ to prove compatibility of $e$. This would look more natural in a final version of the paper.
+%\end{todo}
 Now, since $e$ is compatible w.r.t. $b_*$, we have by \eqref{eq:bridge} that it is forward complete w.r.t. $b^*$ and, by the fact that $i\subseteq e(i)$ and Proposition \ref{prop:mod}.5, also w.r.t. $b^*\cup i$. By Proposition \ref{prop:Cousot}, $e$ is a complete domain for abstract interpretation. 
 
 This provides a novel perspective on the Hopcroft and Karp's algorithm. It can be though as the computation of the least fixed-point  of the function $b^*\cup i$ abstracted to the lattice of equivalence relations $ERel_X$. We denote this function by $\overline{b^*\cup i}\colon ERel_X \to ERel_X$ and $\alpha \dashv \gamma \colon Rel_X \to ERel_X$ the pair of adjoint associated to $e$. The map $\alpha$ assign to every relation its equivalence closure; $\gamma$ is just the obvious injection. The function $\overline{b^*\cup i}$ is just $\alpha \circ (b^*\cup i) \circ \gamma$: it basically takes an equivalence relation, computes $b^*\cup i$ and then makes its equivalence closure. The algorithm returns true iff $\mu (\overline{b^*\cup i}) \subseteq f$. Soundness is trivial: if $\mu (\overline{b^*\cup i})  \subseteq f$, then $$\mu (b^*\cup i) \subseteq \gamma \alpha \mu (b^*\cup i) \subseteq \gamma \mu (\overline{b^*\cup i}) \subseteq \gamma  f =f\text{.}$$
@@ -713,10 +650,10 @@ Some partial but interesting results are in the attached notes scanned by Robert
 
 
 \section{Most abstract Complete domain and companion}
-
-\begin{todo}
-This is a completely unexplored field where I can we can say a lot. We should look at really carefully.
-\end{todo}
+%
+%\begin{todo}
+%This is a completely unexplored field where I can we can say a lot. We should look at really carefully.
+%\end{todo}
 
 
 \section{Side tracks}
@@ -1098,12 +1035,12 @@ $$Z\supseteq \{1\} \cup 2Z \supseteq \{1\} \cup \{2\} \cup 4Z \supseteq \dots$$
 \item Whenever we have soundness and completeness, each proof by coinduction up-to can be transformed into a proof by induction in the abstract domain; viceversa the result of abstract interpretation can be seen as the witness of a proof by coinduction up-to.   
 \end{enumerate}
 %
-\begin{todo}
-If we will ever write something similar, we should also remark that the $b$ used by Milner for coinduction was not an adjoint so, it does not fir into our analysis.
-\end{todo}
-\begin{todo}
-Unfortunately statement like 3 or 1 are not really precise, because we are still missing the fix-point completeness...
-\end{todo}
+%%\begin{todo}
+%%If we will ever write something similar, we should also remark that the $b$ used by Milner for coinduction was not an adjoint so, it does not fir into our analysis.
+%%\end{todo}
+%\begin{todo}
+%Unfortunately statement like 3 or 1 are not really precise, because we are still missing the fix-point completeness...
+%\end{todo}
 
 
 
@@ -1224,6 +1161,51 @@ Kleisli Extension $\overline{b} \colon Kl(a) \to Kl(a)$ & EM lifting $\overline{
 $\alpha \colon Alg(b) \to Alg(\overline{b})$ is a left adjoint & $\gamma \colon Coalg(\overline{b}) \to Coalg (b)$ is a right adjoint \\
 \end{tabular}
 
+\section{Proofs}\label{app:proof}
+\begin{proof}[Proof of Lemma\ref{lemma:equivalentformulation}]
+First part.
+
+($1\Rightarrow 2$) $ab = aba \sqsupseteq ba$ since $a$ is an up-closure. ($2\Rightarrow 3$) It always holds $(\alpha b \gamma) \alpha \sqsupseteq \alpha b$. For the other inclusion, observe that if $ba \sqsubseteq ab$, then $b\gamma \alpha \sqsubseteq \gamma \alpha b$ and  $\alpha b\gamma \alpha \sqsubseteq \alpha \gamma \alpha b \sqsubseteq \alpha b$.
+($3 \Rightarrow 1$) Since $(\alpha b \gamma) \alpha = \alpha b$, then $\gamma (\alpha b \gamma) \alpha = \gamma\alpha b$, that is $aba = ab$.
+
+Second part.
+
+($1\Rightarrow 2$) Since $b\circ a = a\circ b\circ a$ then $b\circ a = a\circ b\circ a \sqsupseteq a\circ b$. 
+%
+($2\Rightarrow 1$) Since $a\circ b \sqsubseteq b\circ a$, then $a\circ b \circ a \sqsubseteq b\circ a \circ a \sqsubseteq b \circ a$. The other inclusion, $b\circ a \subseteq  a\circ b\circ a$, holds since $a$ is an up-closure.
+%
+ ($2\Rightarrow 3$) Observe that $A=Pre(a)$ by construction. For every pre fixed-point $a(x)\sqsubseteq x$, it holds that $ab(x) \sqsubseteq ba(x)\sqsubseteq b(x)$, namely $b(x)$ is a pre fixed-point. One can therefore define $\overline{b}(x) = b(x)$. The fact that $\gamma \overline{b} =  b \gamma$ follows immediately by construction of $\gamma$. 
+ %
+ ($3 \Rightarrow 2$) By construction of $\gamma$, for every pre fixed point $x$, $b(x)$ is forced to be a pre fixed-point of $a$: $ab(x)\sqsubseteq b(x)$. Therefore  $ab(x)\sqsubseteq b(x) \sqsubseteq ba(x)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{prop:compatible}]
+For each $y\sqsubseteq ba(y)$, $a(y)\sqsubseteq aba(y) \sqsubseteq baa(y) \sqsubseteq ba(y)$. Therefore $a(y)\sqsubseteq \nu b$. If $x\sqsubseteq y$, then $x\sqsubseteq a(y)\sqsubseteq \nu b$.
+\end{proof}
+%
+
+\begin{proof}[Proof of Theorem \ref{prop:Cousot}]
+The assumption of Scott-continuity is necessary to characterise 
+%
+$$\alpha(\mu b) = \alpha (\bigsqcup_{n} b^n(\bot_C) ) \qquad \text{ and } \qquad \mu(\alpha b \gamma) =  \bigsqcup_{n} (\alpha b \gamma)^n(\bot_A) \text{.}$$ 
+Since $\alpha$ is a left adjoint we have that the leftmost is equivalent to  $ (\bigsqcup_{n}  \alpha b^n(\bot_C) $.
+
+By induction on $n$, we prove that $\alpha b^n(\bot_C) = (\alpha b \gamma)^n (\bot_A)$.
+\begin{itemize}
+\item For $n=0$, $\alpha(\bot_C) = \bot_A$;
+\item For $n+1$, we have that $\alpha b \gamma (\alpha b \gamma)^n (\bot_A) = \alpha b\gamma \alpha b^n (\bot_C)$ by induction hypothesis. Using the property of Kl-lifting, the latter is equivalent to $\alpha b b^n (\bot_C) = \alpha b^{n+1}(\bot_C)$.
+\end{itemize}
+\end{proof}
+
+
+\section{Additional results}
+\begin{proposition}
+Let $a,b\colon C\to C$ be two monotone maps so that $a$ is backward complete w.r.t. $b$. Let $\overline{b}\colon A \to A$ be the corresponding EM lifting. Then $\gamma(\nu {\overline{b}}) = \nu b$.
+\end{proposition}
+\begin{proof}
+Recall that $A = Pre(a)$. By the Knaster-Tarski fixed-point theorem  $\gamma(\nu {\overline{b}}) =  \bigsqcup \{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \}$ and  $\nu b = \bigsqcup \{ x  \mid x \sqsubseteq b(x) \}$. Since $\{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \} \subseteq \{ x  \mid x \sqsubseteq b(x) \}$, then $\gamma(\nu {\overline{b}}) \sqsubseteq \nu b$.
+Observe that $a(\nu b) = ab(\nu b)\sqsubseteq ba(\nu b)$, namely $a(\nu b)$ is a post fixed-point of $b$. Therefore $a(\nu b) \sqsubseteq \nu b \sqsubseteq b(\nu b)$, which means $\nu b \in \{ x  \mid a(x) \sqsubseteq x \sqsubseteq b(x) \}$. This proves that $\nu b \sqsubseteq \gamma(\nu {\overline{b}})$.
+\end{proof}
 
 
 

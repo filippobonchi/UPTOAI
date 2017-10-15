@@ -32,6 +32,12 @@ B.~Klin.
 \newblock Bialgebras for structural operational semantics: An introduction.
 \newblock {\em TCS}, 412(38):5043--5069, 2011.
 
+\bibitem{PS12}
+D.~Pous and D.~Sangiorgi.
+\newblock Enhancements of the bisimulation proof method.
+\newblock In {\em Advanced Topics in Bisimulation and Coinduction}, pages
+  233--289. Cambridge University Press, 2012.
+
 \bibitem{turi1997towards}
 Daniele Turi and Gordon Plotkin.
 \newblock Towards a mathematical operational semantics.
