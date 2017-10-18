@@ -545,6 +545,75 @@ To prove that $s$ is fully complete w.r.t. $b$, one can prove that it is fully c
 NO IT DOES NOT WORK: IT IS NOT TRUE THAT $s$ is fully complete w.r.t. $b$,
 
 \section{Relating Abstract Interpretation and Coinduction up-to by adjointness}
+
+%\begin{defintion}
+Let $C$ be a complete lattice.
+A condition system is a triple $(i,b^*\vdash b_*,f)$ where $i,f\in C$ represent initial and final conditions and $b^*\vdash b_*\colon C \to C$ is a pair of adjoints.
+$\mu (b^*\sqcup i)$ represet the strongest condition holding after executing $b$
+%\end{definition}
+
+
+\begin{proposition}\label{prop:correspondencefixedpoints}Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. 
+$$(b^*\sqcup i)(x) \sqsubseteq x \sqsubseteq f \qquad \text{ iff } \qquad 
+i \sqsubseteq x \sqsubseteq (b_*\sqcap f) (x)$$
+\end{proposition}
+\begin{proof}
+If $(b^*\sqcup i)(x) \sqsubseteq x$, then $ i \sqsubseteq x$ and $b^*x\sqsubseteq x$. From the latter, it follows that $x\sqsubseteq b_* x$. 
+%
+Since $x\sqsubseteq f$, then  $x\sqsubseteq b_* x \sqcap f$, that is $x\sqsubseteq (b_* \sqcap f)(x)$.
+
+Conversely, $x \sqsubseteq (b_*\sqcap f)(x)$ entails that $x\sqsubseteq f$ and $x \sqsubseteq b_*x$. From the latter, it follows that $b^*x\sqsubseteq x$. 
+%
+Since $i\sqsubseteq x$, then $i\sqcup b^*x \sqsubseteq x$, that is $(i \sqcup b^*)(x) \sqsubseteq x$.
+\end{proof}
+
+The result below follows immediately by Knaster-Tarski.
+
+\begin{corollary}
+$\mu (b^*\sqcup i)\sqsubseteq f$ iff $i \sqsubseteq \nu (b_*\sqcap f) $.
+\end{corollary}
+
+This corollary has an interesting computational meaning. If the least-fixed point computed by the program $b^*$ with input $i$ is below $f$, then it is a bisimulation, witnessing that $i\sqsubseteq  \nu (b_*\sqcap f)$. For an example consider the \texttt{Naive} algorithm:  the loop \texttt{(3)} compute the least fixed point of $reach_i$, that is the pairs of all states reachable from $i$. If all of them are into $f$, then then  these pairs form a relation that is a bisimulation witnessing that the pair of initial states in $i$ are language equivalent.
+
+We now move toward abstract domains and up-to techniques.
+
+\begin{proposition}
+Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. Let $a\colon C\to C$ be backward complete w.r.t. $b^*$ or, equivalently, compatible w.r.t. $b_*$. Assume moreover that $a(f)\sqsubseteq f$. 
+%
+If $x$ is a post-fixpoint of $(b_*\sqcap f)a$ such that $i\sqsubseteq x$,
+then $a(x)$ is a pre-fixpoint of $(b^*\sqcup i)$ such that $a(x)\sqsubseteq f$.
+In symbols, 
+\begin{equation}
+i \sqsubseteq x \sqsubseteq (b_*\sqcap f)a(x)
+\text{ entails }
+(b^*\sqcap i)a(x)\sqsubseteq a(x)\sqsubseteq f
+\end{equation}
+
+\end{proposition}
+%
+\begin{proof}
+%
+If $x\sqsubseteq (b_*\sqcap f)a(x)$, then (1) $x\sqsubseteq f$ and (2) $x\sqsubseteq b_*a(x)$. From (1), $a(x)\sqsubseteq a(f)\sqsubseteq f$. From (2), $b^*(x)\sqsubseteq a(x)$ and using compatibility $b^*a(x)\sqsubseteq ab^*(x)\sqsubseteq aa(x) = a(x)$. Moreover $i\sqsubseteq x\sqsubseteq a(x)$ and thus $(b^*\sqcup i)a(x)  = b^*a(x) \sqcup i \sqsubseteq a(x)$.
+\end{proof}
+
+Intuitively, the proposition is stating that every bisimulation up-to $a$ is a prefixpoint of $(b^*\sqcap i)$ in the abstract domain.
+The other direction does not hold in general, since there is no way to deduce $i\sqsubseteq x$ from $(b^*\sqcap i)a(x)\sqsubseteq a(x)$.
+However, when $a(x)$ is the result of the abstract interpreter. To prove this, we do not need backward completeness, but simply fix point completeness: $a\mu (b^*\sqcup i) = \mu(a(b^*\sqcup i)a)$. In this case, the result of the abstract interpreter $\mu(a(b^*\sqcup i)a)$ is equal to 
+$\mu a(b^*\sqcup i)$ (see below), and thus $(b^*\sqcup i)a\mu (b^*\sqcup i) \sqsubseteq a(b^*\sqcup i)a\mu (b^*\sqcup i) \sqsubseteq a\mu (b^*\sqcup i)$. This means that $a\mu (b^*\sqcup i)$ is a pre-fixpoint of $(b^*\sqcup i)$. By Proposition \label{prop:correspondencefixedpoints}
+ $a\mu (b^*\sqcup i)$ is a post-fixpoint for  $(b_*\sqcap f)$ and thus $\mu (b^*\sqcup i)$ is a bisimulation up-to $a$. Moreover, it trivially holds that $i\sqsubseteq \mu (b^*\sqcup i)$.
+ 
+\begin{proposition}
+Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. Let $a\colon C\to C$ be fixpoint complete w.r.t. $b^*\sqcup i$, that is $a\mu (b^*\sqcup i) = \mu(a(b^*\sqcup i)a)$. Then $i\sqsubseteq \mu(b^*\sqcup i) \sqsubseteq (b^*\sqcup i) a(\mu(b^*\sqcup i))$. 
+%
+\end{proposition}
+\begin{proof}
+Copy the argument above!
+\end{proof}
+
+
+
+
+
 To relate abstract interpretation and coinduction up-to we need to assume that the monotone map $b\colon C\to C$ is part of an adjunction.
 Hereafter we denote the adjunction by $b^*\dashv b_* \colon C\to C$. Our idea is based on the observation in \cite{} relating backward and forward completeness:
 $$ ab^* = ab^*a \quad \text{ iff } \quad b_*a = ab_* a \text{.}$$
@@ -759,60 +828,6 @@ Now assume that $\mu(\alpha b \gamma) y' =  \alpha(\mu b)$ and that the conclusi
 
 \section{In Madrid}
 
-\begin{proposition}\label{prop:correspondencefixedpoints}Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. The following are equivalent:
-\begin{itemize}
-\item $x$ is a pre-fixpoint of $(b^*\sqcup i)$ such that $x\sqsubseteq f$
-\item $x$ is a post-fixpoint of $(b_*\sqcap f)$ such that $i\sqsubseteq x$.
-\end{itemize}
-\end{proposition}
-\begin{proof}
-If $x$ is a pre-fixpoint, then $ i \sqsubseteq x$ and $b^*x\sqsubseteq x$. From the latter, it follows that $x\sqsubseteq b_* x$. Since $x\sqsubseteq f$, then  $x\sqsubseteq b_* x \sqcap f$, that is $x\sqsubseteq (b_* \sqcap f)x$.
-
-Conversely, $x \sqsubseteq (b_*\sqcap f)x$ entails that $x\sqsubseteq f$ and $x \sqsubseteq b_*x$. From the latter, it follows that $b^*x\sqsubseteq x$. Since $i\sqsubseteq x$, then $i\sqcup b^*x \sqsubseteq x$, that is $(i \sqcup b^*)x \sqsubseteq x$.
-\end{proof}
-
-The result below follows immediately by Knaster-Tarski.
-
-\begin{corollary}
-$\mu (b^*\sqcup i)\sqsubseteq f$ iff $i \sqsubseteq \nu (b_*\sqcap f) $.
-\end{corollary}
-
-This corollary has an interesting computational meaning. If the least-fixed point computed by the program $b^*$ with input $i$ is below $f$, then it is a bisimulation, witnessing that $i\sqsubseteq  \nu (b_*\sqcap f)$. For an example consider the \texttt{Naive} algorithm:  the loop \texttt{(3)} compute the least fixed point of $reach_i$, that is the pairs of all states reachable from $i$. If all of them are into $f$, then then  these pairs form a relation that is a bisimulation witnessing that the pair of initial states in $i$ are language equivalent.
-
-We now move toward abstract domains and up-to techniques.
-
-\begin{proposition}
-Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. Let $a\colon C\to C$ be backward complete w.r.t. $b^*$ or, equivalently, compatible w.r.t. $b_*$. Assume moreover that $a(f)\sqsubseteq f$. 
-%
-If $x$ is a post-fixpoint of $(b_*\sqcap f)a$ such that $i\sqsubseteq x$,
-then $a(x)$ is a pre-fixpoint of $(b^*\sqcup i)$ such that $a(x)\sqsubseteq f$.
-In symbols, 
-\begin{equation}
-i \sqsubseteq x \sqsubseteq (b_*\sqcap f)a(x)
-\text{ entails }
-(b^*\sqcap i)a(x)\sqsubseteq a(x)\sqsubseteq f
-\end{equation}
-
-\end{proposition}
-%
-\begin{proof}
-%
-If $x\sqsubseteq (b_*\sqcap f)a(x)$, then (1) $x\sqsubseteq f$ and (2) $x\sqsubseteq b_*a(x)$. From (1), $a(x)\sqsubseteq a(f)\sqsubseteq f$. From (2), $b^*(x)\sqsubseteq a(x)$ and using compatibility $b^*a(x)\sqsubseteq ab^*(x)\sqsubseteq aa(x) = a(x)$. Moreover $i\sqsubseteq x\sqsubseteq a(x)$ and thus $(b^*\sqcup i)a(x)  = b^*a(x) \sqcup i \sqsubseteq a(x)$.
-\end{proof}
-
-Intuitively, the proposition is stating that every bisimulation up-to $a$ is a prefixpoint of $(b^*\sqcap i)$ in the abstract domain.
-The other direction does not hold in general, since there is no way to deduce $i\sqsubseteq x$ from $(b^*\sqcap i)a(x)\sqsubseteq a(x)$.
-However, when $a(x)$ is the result of the abstract interpreter. To prove this, we do not need backward completeness, but simply fix point completeness: $a\mu (b^*\sqcup i) = \mu(a(b^*\sqcup i)a)$. In this case, the result of the abstract interpreter $\mu(a(b^*\sqcup i)a)$ is equal to 
-$\mu a(b^*\sqcup i)$ (see below), and thus $(b^*\sqcup i)a\mu (b^*\sqcup i) \sqsubseteq a(b^*\sqcup i)a\mu (b^*\sqcup i) \sqsubseteq a\mu (b^*\sqcup i)$. This means that $a\mu (b^*\sqcup i)$ is a pre-fixpoint of $(b^*\sqcup i)$. By Proposition \label{prop:correspondencefixedpoints}
- $a\mu (b^*\sqcup i)$ is a post-fixpoint for  $(b_*\sqcap f)$ and thus $\mu (b^*\sqcup i)$ is a bisimulation up-to $a$. Moreover, it trivially holds that $i\sqsubseteq \mu (b^*\sqcup i)$.
- 
-\begin{proposition}
-Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. Let $a\colon C\to C$ be fixpoint complete w.r.t. $b^*\sqcup i$, that is $a\mu (b^*\sqcup i) = \mu(a(b^*\sqcup i)a)$. Then $i\sqsubseteq \mu(b^*\sqcup i) \sqsubseteq (b^*\sqcup i) a(\mu(b^*\sqcup i))$. 
-%
-\end{proposition}
-\begin{proof}
-Copy the argument above!
-\end{proof}
 
 
 
@@ -955,7 +970,6 @@ For $x^2$, we obtain the following equation
 \end{equation}
 that has as smallest solution $\mu (i \cup b^*)$ where $i=\{5\}$ and $b^*\colon Pred_Z \to Pred_Z$ is defined as $b^*(P) = ( (P\cap [1,\infty) ) \ominus 1 )$ for all predicates $P$. Our initial aim is to check whether $x^5 = x^2 \cap (-\infty, 0] = \mu (i \cup b^*)\cap (-\infty, 0]  \subseteq \{0\}$. That is $\mu (i \cup b^*)\subseteq [0,\infty)$. We fix $f = [0,\infty)$.
 
-\marginpar{Form this computation, I would guess that definition of $\ominus1$ is wrong. Please Roberto check it cerafully}
 We proceed by computing $\nu (i \cup b^*)$ in the standard way:
 \begin{equation}\label{eq:lfpcomp}
 \emptyset \subseteq \{5\} \subseteq \{5,4\} \subseteq \{5,4,3\} \subseteq \dots \subseteq \{5,4,3,2,1\} \subseteq \{5,4,3,2,1,0\}

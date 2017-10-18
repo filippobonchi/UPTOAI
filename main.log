@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.10.27)  15 OCT 2017 23:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.10.27)  18 OCT 2017 11:45
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1082,28 +1082,18 @@ Underfull \hbox (badness 5460) in paragraph at lines 506--506
 \T1/cmr/m/n/10 un-der-stood: maybe
  []
 
-[8] [9] [10]
+[8] [9] [10] [11] [12]
 
-LaTeX Warning: Reference `table:analogies' on page 11 undefined on input line 6
-31.
+LaTeX Warning: Reference `table:analogies' on page 13 undefined on input line 7
+00.
 
-[11] [12] [13] [14]
-Underfull \hbox (badness 10000) in paragraph at lines 958--958
-\T1/cmr/m/n/10 that def-i-ni-tion of
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 958--958
-\T1/cmr/m/n/10 Roberto check it
- []
-
-<xymatrix 3x4 454>
-Overfull \hbox (12.81572pt too wide) in paragraph at lines 978--979
+[13] [14] <xymatrix 3x4 454> [15]
+Overfull \hbox (12.81572pt too wide) in paragraph at lines 992--993
 []\T1/cmr/m/n/10 Another way of rea-son-ing is pro-vided by the great-est fix-p
 oint. Take $\OML/cmm/m/it/10 b[] [] [] Pred[] \OMS/cmsy/m/n/10 !
  []
 
-[15] [16] [17] (./main.bbl
+[16] [17] (./main.bbl
 Underfull \vbox (badness 3148) has occurred while \output is active []
 
  [18])
@@ -1111,19 +1101,19 @@ Underfull \vbox (badness 3148) has occurred while \output is active []
 
 ]
 
-LaTeX Warning: Reference `' on page 21 undefined on input line 1152.
+LaTeX Warning: Reference `' on page 21 undefined on input line 1166.
 
 
-Overfull \hbox (10.3386pt too wide) in paragraph at lines 1156--1163
+Overfull \hbox (10.3386pt too wide) in paragraph at lines 1170--1177
 [][] 
  []
 
 [21] [22]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1213.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1213.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1227.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1227.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1213.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1213.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1227.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1227.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: C4BA8C64B514FB30F1490E6F58051941;87.
@@ -1134,12 +1124,12 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1213.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1227.
  ) 
 Here is how much of TeX's memory you used:
  21997 strings out of 493089
  395901 string characters out of 6134841
- 505844 words of memory out of 5000000
+ 504904 words of memory out of 5000000
  24823 multiletter control sequences out of 15000+600000
  24569 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1174,7 +1164,7 @@ pe1/public/cm-super/sftt1000.pfb></usr/local/texlive/2015/texmf-dist/fonts/type
 1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/
 public/xypic/xycmat10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/publi
 c/xypic/xycmbt10.pfb>
-Output written on main.pdf (22 pages, 460925 bytes).
+Output written on main.pdf (22 pages, 461181 bytes).
 PDF statistics:
  500 PDF objects out of 1000 (max. 8388607)
  432 compressed objects within 5 object streams
