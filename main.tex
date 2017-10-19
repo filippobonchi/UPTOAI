@@ -141,12 +141,18 @@ Confluence, DPO rewriting systems, adhesive categories, PROPs, string diagrams.
 We use $(L,\sqsubseteq)$, $(L_1,\sqsubseteq_1)$, $(L_2,\sqsubseteq_2)$ to range over complete lattices and $x,y,z$ to range over their elements. We omit the ordering $\sqsubseteq$ whenever unecessary. As usual $\bigsqcup$ and $\bigsqcap$ denote greatest lower bound and least upper bound, $\sqcup$ and $\sqcap$ denote join and meet, $\top$ and $\bot$ top and bottom.
 
 %A map $f\colon L_1\to L_2$ is said to be \emph{monotone} if $x\sqsubseteq_1 y$ entails that $f(x) \sqsubseteq_2 f(y)$. 
-Hereafter we will consider just monotone maps, so we will usually omit to specify that they are monotone. Obviously, the identitiy map $id\colon L\to L$ and the composition $f\circ g \colon L_1\to L_3$ of two monotone maps $g\colon L_1\to L_2$ and  $f\colon L_2\to L_3$  are monotone. Given $l \colon L_1 \to L_2$ and $r\colon L_2\to L_1$, we say that $l$ is the \emph{left adjoint} of $r$, or equivalently that $r$ is the \emph{right adjoint} of $l$, written $l\dashv r \colon L_1\to L_2$, iff $x\sqsubseteq_1 rl(x)$ and $lr(y) \sqsubseteq_2 y$ for all $x\in L_1$ and $y\in L_2$. %Observe that if it exists the adjoint is unique. We will often use the fact that a map $f$ is a left adjoint iff it preserves $\bigsqcup$ (in particular $\bot$) and a right adjoint iff it preserves $\bigsqcup$ (in particular $\top$).
+Hereafter we will consider just monotone maps, so we will usually omit to specify that they are monotone. Obviously, the identitiy map $id\colon L\to L$ and the composition $f\circ g \colon L_1\to L_3$ of two monotone maps $g\colon L_1\to L_2$ and  $f\colon L_2\to L_3$  are monotone. 
 
-Given a monotone map $f\colon L\to L$, $x$ is said to be a \emph{post-fixed point} iff  $x\sqsubseteq f(x)$ and a \emph{pre-fixed point} iff $f(x)\sqsubseteq x$\footnote{It is also common to find in literature the reversed definitions of post and pre-fixed point. Here we adopted the terminology of \cite{davey_priestley_2002}}. A \emph{fixed point} iff $x=f(x)$. Pre, post and fixed points form complete lattices, denoted by $Pre(f)$, $Post(f)$ and $Fix(f)$: we write $\mu f$ and $\nu f$ for the least and greatest fixed-point. Recall that if $l\dashv r$, then $x\sqsubseteq r(x)$ iff $l(x)\sqsubseteq l(r(x))$ iff $l(x)\sqsubseteq x$. % and moreover $\mu l = \bot$ and $\nu r = \top$.
+Given a monotone map $f\colon L\to L$, $x\in L$ is said to be a \emph{post-fixed point} iff  $x\sqsubseteq f(x)$ and a \emph{pre-fixed point} iff $f(x)\sqsubseteq x$\footnote{It is also common to find in literature the reversed definitions of post and pre-fixed point. Here we adopted the terminology of \cite{davey_priestley_2002}}. A \emph{fixed point} iff $x=f(x)$. Pre, post and fixed points form complete lattices, denoted by $Pre(f)$, $Post(f)$ and $Fix(f)$: we write $\mu f$ and $\nu f$ for the least and greatest fixed-point. Recall that if $l\dashv r$, then $x\sqsubseteq r(x)$ iff $l(x)\sqsubseteq l(r(x))$ iff $l(x)\sqsubseteq x$. % and moreover $\mu l = \bot$ and $\nu r = \top$.
+
+For a map $f\colon L \to L$, we inductively define $f^0=id$ and $f^{n+1}=f\circ f^n$. We fix $f^\uparrow = \bigsqcup_{i\in \omega} f^i$ and $f^\downarrow = \bigsqcap_{i\in \omega} f^i$. A monotone map $f\colon L \to L$ is an \emph{up-closure} operator if $x\sqsubseteq f(x)$ and $ff(x) \sqsubseteq x$. It is a \emph{down-closure} operator if $f(x)\sqsubseteq x$ and $x \sqsubseteq ff(x)$. For any $f$, $f^\uparrow$ is an up-closure and $f^\downarrow$ is a down-closure. 
+
+Given $l \colon L_1 \to L_2$ and $r\colon L_2\to L_1$, we say that $l$ is the \emph{left adjoint} of $r$, or equivalently that $r$ is the \emph{right adjoint} of $l$, written $l\dashv r \colon L_1\to L_2$, iff $x\sqsubseteq_1 rl(x)$ and $lr(y) \sqsubseteq_2 y$ for all $x\in L_1$ and $y\in L_2$. Moreover, $r\circ l$ is an up-closure operator and $l\circ r$ a down-closure operator. When $l\circ r=id$ we say that $l\dashv r$ is a \emph{Galois insertion} (GI), hereafter denoted as $\langle \alpha,\gamma \rangle$.
+%Observe that if it exists the adjoint is unique. We will often use the fact that a map $f$ is a left adjoint iff it preserves $\bigsqcup$ (in particular $\bot$) and a right adjoint iff it preserves $\bigsqcup$ (in particular $\top$).
+Closure operators and Galois insertions are in one to one correspondences: given an up-closure operator $f\colon L\to L$, the functions $l\colon L \to Pre(f)$, defined as $l(x) = \bigsqcap \{y \mid x\sqsubseteq y \sqsupseteq f(y) \}$ is the left adjoint of $r\colon Pre(f) \to L$, defined as $r(x)=x$.
 
 
-For a map $f\colon L \to L$, we inductively define $f^0=id$ and $f^{n+1}=f\circ f^n$. We fix $f^\uparrow = \bigsqcup_{i\in \omega} f^i$ and $f^\downarrow = \bigsqcap_{i\in \omega} f^i$. A monotone map $f\colon L \to L$ is an \emph{up-closure} operator if $x\sqsubseteq f(x)$ and $ff(x) \sqsubseteq x$. It is a \emph{down-closure} operator if $f(x)\sqsubseteq x$ and $x \sqsubseteq ff(x)$. For any $f$, $f^\uparrow$ is an up-closure and $f^\downarrow$ is a down-closure. Closure operators and pairs of adjoints are in one to one correspondences: for a pair of adjoint $l\dashv r$, $r\circ l$ is an up-closure operator and $l\circ r$ a down-closure operator. Given an up-closure operator $f\colon L\to L$, the functions $l\colon L \to Pre(f)$, defined as $l(x) = \bigsqcap \{y \mid x\sqsubseteq y \sqsupseteq f(y) \}$ is the left adjoint of $r\colon Pre(f) \to L$, defined as $f(x)=x$.
+
 
 \medskip
 
@@ -362,7 +368,7 @@ Since $\{5,4,3,2,1,0\} \subseteq [0,\infty)$, we have proved our conjecture.
 Suppose now to modify the code above, by initialising  \texttt{$x$} to $-5$, rather than $5$. The above analysis rest untouched  apart from $b$ thats should be replaced by $b'$ defined as $b'(P) = \{-5\} \cup ( (P\cap [1,\infty) ) \ominus\! 1 )$. It is rather intuitive that the computation of $b'$ diverges: $\emptyset \subseteq \{-5\} \subseteq \{-5,-6\} \subseteq \dots$
 
 \subsection{Abstract domains}
-The main idea of abstract interpretation is that to check whether  $\mu b\sqsubseteq f$ for some $b\colon C \to C$ and $f\in C$, the computation of $\mu b$ can be carried more effectively in some \emph{abstract domain} $A$, namely a completely lattice with a pair of adjoints $(\alpha \dashv \gamma) \colon C \to A$. We will usually call abstract domain also the associated  closure operator, hereafter denoted by $a\colon C \to C$. 
+The main idea of abstract interpretation is that to check whether  $\mu b\sqsubseteq f$ for some $b\colon C \to C$ and $f\in C$, the computation of $\mu b$ can be carried more effectively in some \emph{abstract domain} $A$, namely a completely lattice with Galois insertion $\langle \alpha, \gamma\rangle \colon C \to A$. We will usually call abstract domain also the associated  closure operator, hereafter denoted by $a\colon C \to C$. 
 
 Whenever $a(f)\sqsubseteq f$, that is $f\in A$, one prefers to check  $\mu \overline{b}\sqsubseteq_A f$ where the map $\overline{b}\colon A\to A$ represents an approximation of the  program $b$ on the abstract domain $A$.
 The approximation $\overline{b}$ is said to be \emph{sound} (w.r.t. $b$) if
@@ -511,7 +517,12 @@ HISTORICAL EXPLANATION
 \end{remark}
 
  
+ 
  \subsection{Proving soundness of equivalence closure}\label{sec:HKsoundness}
+
+ 
+ 
+ 
  Recall the monotone map $b\colon \Rel_X \to \Rel_X$ defined in \eqref{eq:functional-bisim-da} and the up-closure $e\colon \Rel_X \to \Rel_X$ introduced in Section \ref{ssec:HK}.
  In order to prove that the Hopcroft and Karp algorithm is sound one has to relies on the fact that $e$ is sound w.r.t. $b$. 
  Thanks to Theorem \ref{prop:compatible}, one can prove soundness by showing that $e$ is compatible w.r.t. $b$. The proof of compatibility can be simplified by using its formulation in point 2 of Lemma \ref{lemma:equivalentformulation} and Proposition \ref{prop:mod}.
@@ -530,7 +541,7 @@ $$t(R)=\{(x,z) \mid \exists y \text{ s.t. } (x,y) \in R \text{ and } (y,z)\in R\
 
 The proof of  compatibility of $e$ w.r.t. $b$ can be decomposed by compatibility of $e$ w.r.t. $b_*$ and $f$ and then use Proposition  \ref{prop:mod}.5. Furthermore, to prove that $e$ is compatible w.r.t. $b_*$, one can prove that $r,s,t$ are compatible w.r.t. $b_*$ and then use points 1,3 and 4 of Proposition  \ref{prop:mod}. For $f$, it is immediate to check that $ef\subseteq f$. 
 
-\subsection{Proving completeness of the domain of signs}
+\subsection{Proving completeness of the domain of signs}\label{sec:Signcomplete}
 Call $s$ the up-closure associated with the domain of signs introduced in Section \ref{ssec:AItoy} and recall $b\colon \Pred_Z \to \Pred_Z$ defined in \eqref{eq:babstractInt}. Thanks to Theorem \ref{prop:Cousot}, one can prove $s$ is complete w.r.t. $b$, by showing that it is fully complete. The proof of full completness can be simplified by using its formulation in point 2 of Lemma \ref{lemma:equivalentformulation} and Proposition \ref{prop:mod}. Note that while for up-to techniques the map $b$ plays the role of $h,h_1,h_2$ in Proposition \ref{prop:mod}, for abstract domains, $b$ ranges over $g,g_1,g_2$.
 
 The map $b$ can be decomposed as $b=i \cup b^*$ where $i,b^* \colon \Rel_X\to  \Rel_X$ are defined for all predicates $P$ as follows.
@@ -544,15 +555,15 @@ To prove that $s$ is fully complete w.r.t. $b$, one can prove that it is fully c
 
 NO IT DOES NOT WORK: IT IS NOT TRUE THAT $s$ is fully complete w.r.t. $b$,
 
+
 \section{Relating Abstract Interpretation and Coinduction up-to by adjointness}
+%
+Following the example in Sections \ref{sec:HKsoundness} and \ref{sec:Signcomplete}, we restrict our attention to those monotone maps $b\colon C \to C$ that can be decomposed as either $b=i \sqcup b^*$ or $b= b_* \sqcap f$.  %for some $i,f\in C$ and a pair of adjoints $b^*\dashv b_*\colon C \to C$. Intuitively, the elements of $C$ represent some predicates, or conditions, $i$ and $f$ intial and final condifitions, and $b^*$ and $b_*$ predicate transformers mapping a condition into its strongest postcondition and weakest precondition.
+%
+Here, we assume $b^*$ and $b_*$ to be left and right adjoint, intuitively representing  predicate transformers mapping a condition into its strongest postcondition and weakest precondition. Intial and final conditions are represented by $i$ and $f$, that are elements of $C$. With an abuse of notation we will often write $i$ and $f$ for the constant functions $i,f\colon C \to C$ mapping every $x\in C$ into $i$ and $f$.
 
-%\begin{defintion}
-Let $C$ be a complete lattice.
-A condition system is a triple $(i,b^*\vdash b_*,f)$ where $i,f\in C$ represent initial and final conditions and $b^*\vdash b_*\colon C \to C$ is a pair of adjoints.
-$\mu (b^*\sqcup i)$ represet the strongest condition holding after executing $b$
-%\end{definition}
-
-
+One is interested in checking whether $\mu (b_*\sqcup i) \sqsubseteq f$ or $i \sqsubseteq \nu (b^* \sqcap f)$. The following result ensures that the two statement are equivalent.
+%
 \begin{proposition}\label{prop:correspondencefixedpoints}Let $b^* \dashv b_* \colon C \to C$ and $i,f,x\in C$. 
 $$(b^*\sqcup i)(x) \sqsubseteq x \sqsubseteq f \qquad \text{ iff } \qquad 
 i \sqsubseteq x \sqsubseteq (b_*\sqcap f) (x)$$
@@ -572,6 +583,8 @@ The result below follows immediately by Knaster-Tarski.
 \begin{corollary}
 $\mu (b^*\sqcup i)\sqsubseteq f$ iff $i \sqsubseteq \nu (b_*\sqcap f) $.
 \end{corollary}
+
+
 
 This corollary has an interesting computational meaning. If the least-fixed point computed by the program $b^*$ with input $i$ is below $f$, then it is a bisimulation, witnessing that $i\sqsubseteq  \nu (b_*\sqcap f)$. For an example consider the \texttt{Naive} algorithm:  the loop \texttt{(3)} compute the least fixed point of $reach_i$, that is the pairs of all states reachable from $i$. If all of them are into $f$, then then  these pairs form a relation that is a bisimulation witnessing that the pair of initial states in $i$ are language equivalent.
 
@@ -716,6 +729,12 @@ $$\alpha (\mu(b^* \sqcup i)) = \mu (\alpha \circ  (b^* \sqcup i) \circ \gamma ) 
 
 We have explored this in a rather extensive way without finding either a proof or a counterexample. Some hints could come by assuming the lattice $C$ to be boolean.
 Some partial but interesting results are in the attached notes scanned by Roberto.
+
+
+\section{Conclusions}
+BLABALA
+
+Admittedly, our work does not contain deep results, since the connection is simple and clear. However, it may bring immediate benefits. Suppose for instance, that one wants to use a complete abstract interpreter in some proof assistant which has already implemented libraries for up-to techniques (e.g., Coq\cite{} and BLA BLA BLA). Then the abstract interpreter should be proved to be complete. Our result allows to straightforwardly reuse such libraries: to prove that $a$ is fully complete w.r.t. $b^*$ it is equivalent to prove that $a$ is compatible w.r.t. the adjoint $b_*$.
 
 
 \section{Most abstract Complete domain and companion}
