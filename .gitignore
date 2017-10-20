@@ -1,3 +1,20 @@
+
+
+allocateDirect potrebbe costare di piu al momento di allocazione: se si fanno poche operazioni potrebbe convenire una allocate normale.
+(Dipende molto dal SO)
+
+
+
+
+
+
+
+
+
+
+
+
+
 *****************************************
 GESTIONE CONTI CORRENTI CON JASON E NIO
 *****************************************

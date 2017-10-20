@@ -62,6 +62,68 @@ Confluence, DPO rewriting systems, adhesive categories, PROPs, string diagrams.
 %\end{center}
 %\end{table}
 
+\section{Summary of the discoveries of 20th of October}
+The original problem of program analysis is to check whether $\mu b \sqsubseteq f$. This can be optimised by taking some up-closure $a\colon C \to C$ such that $a(f)\sqsubseteq f$. We give a novel definition of completeness, which is entailed by fix-point completeness and allows us to solve the original problem. We will show that the set of $a$ which are complete according to this new definition but are not fixed-point complete is non-empty and significant. In particular we will show that it is downward closed.
+
+\medskip
+
+Let $C$ be a complete lattice, $b\colon C \to C$ be a monotone map and $f\in C$. We say that $a$ is \emph{$b,f$-completete} iff
+\begin{equation}
+a(f)\sqsubseteq f \text{ and }  \mu (a b) \sqsubseteq f \text{ iff } \mu b \sqsubseteq f\text{.}
+\end{equation}
+
+To prove that fix-point completeness entails $b,f$-completeness, we need the following lemma.
+
+\begin{lemma} Let $C$ be a complete lattice, $b,a\colon C \to C$ be a monotone map and a up-closure. Let $f\in C$ such that $a(f)\sqsubseteq f$. Then 
+$$ a(\mu b) \sqsubseteq f \text{ iff } \mu b \sqsubseteq f$$
+\end{lemma}
+\begin{proof}
+If $a(\mu b) \sqsubseteq f$, then $\mu b \sqsubseteq a(\mu b) \sqsubseteq f$.
+%
+If $\mu b \sqsubseteq f$, then $a(\mu b) \sqsubseteq a(f) \sqsubseteq f$.
+\end{proof}
+
+
+\begin{proposition}
+Let $C$ be a complete lattice, $b,a\colon C \to C$ be a monotone map and a up-closure. Let $f\in C$ such that $a(f)\sqsubseteq f$. If $a$ is fix-point complete w.r.t. $b$, then $a$ is $b,f$-complete.
+\end{proposition}
+\begin{proof}
+$a$ is fix-point complete means that $\mu (ab)=a(\mu b)$. By the lemma above we have the conclusion.
+\end{proof}
+
+We prove now that the class of $b,f$-complete closures is downward closed. We need the following result.
+
+\begin{lemma} \marginpar{This lemma is not really needed}Let $C$ be a complete lattice, $b,a_1,a_2\colon C \to C$ be a monotone map and two up-closures such that $a_1\sqsubseteq a_2$. Let $f\in C$ such that $a_2(f)\sqsubseteq f$. Then $a_1(f)\sqsubseteq f$ and
+$$ a_2(\mu b) \sqsubseteq f \text{ iff } a_1(\mu b) \sqsubseteq f$$
+\end{lemma}
+\begin{proof}
+If $a_2(\mu b) \sqsubseteq f$, then $a_1(\mu b) \sqsubseteq a_2(\mu b) \sqsubseteq f$.
+%
+If $a_1(\mu b) \sqsubseteq f$, then $a_2(\mu b) \sqsubseteq a_2(a_1(\mu b)) \sqsubseteq  a_2(f) \sqsubseteq f$.
+\end{proof}
+
+\begin{proposition}\label{prop:bfclosed} Let $C$ be a complete lattice, $b,a_1,a_2\colon C \to C$ be a monotone map and two up-closures such that $a_1\sqsubseteq a_2$. Let $f\in C$. If $a_2$ is $b,f$-complete, then $a_1$ is $b,f$-complete.
+\end{proposition}
+\begin{proof}
+If $a_2$ is $b,f$-complete, then (1) $a_2(f)\sqsubseteq f$ and (2) $ \mu (a_2 b) \sqsubseteq f$ iff  $\mu b \sqsubseteq f$. By (1), we have that $a_1(f)\sqsubseteq a_2(f)\sqsubseteq f$.
+Now, as usual, if $\mu(a_1b)\sqsubseteq f$, then  $\mu b\sqsubseteq \mu(a_1b)\sqsubseteq f$. If $\mu b \sqsubseteq f$ then, by (2), $ \mu (a_2 b) \sqsubseteq f$ and thus  $\mu (a_1 b) \sqsubseteq  \mu (a_2 b) \sqsubseteq f$.
+\end{proof}
+
+Proposition \ref{prop:bfclosed} proves that the class of $b,f$-complete closures is closed by $\sqsubseteq$. Note that this is not the case for fix-point completeness
+
+\begin{theorem}[Fix-point completeness vs soundness]
+The class of sound up-to techniques does not coincide with the class of fixed point complete abstract domain
+\end{theorem}
+\begin{proof}
+The first class is closed by $\sqsubseteq$, while the second is not.
+\end{proof}
+
+Can we now prove whether the correspondence hold for $b,f$-completeness?
+
+The importance of this observation is that we can now not look for fixed-point complete domains but rather domain which are below some fixed point complete domain.
+
+
+
 
 \section{Introduction}
 
@@ -584,7 +646,7 @@ The result below follows immediately by Knaster-Tarski.
 $\mu (b^*\sqcup i)\sqsubseteq f$ iff $i \sqsubseteq \nu (b_*\sqcap f) $.
 \end{corollary}
 
-
+FROM HERE ON THIS IS ALL OLD AND TO BE REWRITTEN (OR DISCARDED)
 
 This corollary has an interesting computational meaning. If the least-fixed point computed by the program $b^*$ with input $i$ is below $f$, then it is a bisimulation, witnessing that $i\sqsubseteq  \nu (b_*\sqcap f)$. For an example consider the \texttt{Naive} algorithm:  the loop \texttt{(3)} compute the least fixed point of $reach_i$, that is the pairs of all states reachable from $i$. If all of them are into $f$, then then  these pairs form a relation that is a bisimulation witnessing that the pair of initial states in $i$ are language equivalent.
 
@@ -737,7 +799,10 @@ BLABALA
 Admittedly, our work does not contain deep results, since the connection is simple and clear. However, it may bring immediate benefits. Suppose for instance, that one wants to use a complete abstract interpreter in some proof assistant which has already implemented libraries for up-to techniques (e.g., Coq\cite{} and BLA BLA BLA). Then the abstract interpreter should be proved to be complete. Our result allows to straightforwardly reuse such libraries: to prove that $a$ is fully complete w.r.t. $b^*$ it is equivalent to prove that $a$ is compatible w.r.t. the adjoint $b_*$.
 
 
-\section{Most abstract Complete domain and companion}
+
+
+
+
 %
 %\begin{todo}
 %This is a completely unexplored field where I can we can say a lot. We should look at really carefully.
