@@ -84,7 +84,7 @@ If $\mu b \sqsubseteq f$, then $a(\mu b) \sqsubseteq a(f) \sqsubseteq f$.
 \end{proof}
 
 
-\begin{proposition}
+\begin{proposition}\label{prop:fixpoint-bf}
 Let $C$ be a complete lattice, $b,a\colon C \to C$ be a monotone map and a up-closure. Let $f\in C$ such that $a(f)\sqsubseteq f$. If $a$ is fix-point complete w.r.t. $b$, then $a$ is $b,f$-complete.
 \end{proposition}
 \begin{proof}
@@ -121,6 +121,23 @@ The first class is closed by $\sqsubseteq$, while the second is not.
 Can we now prove whether the correspondence hold for $b,f$-completeness?
 
 The importance of this observation is that we can now not look for fixed-point complete domains but rather domain which are below some fixed point complete domain.
+
+
+
+Another interesting fact about $b,f$-completenessis that it enjoys the following intuitive characterisation w.r.t fixed point completeness.
+\begin{proposition}
+Let $C$ be a complete lattice, $b,a\colon C \to C$ be a monotone map and a up-closure.
+Then:
+\begin{center}
+$a$ is fix-point complete w.r.t. $b$ \\ iff \\ for all $f$ such that $a(f)\sqsubseteq f$, $a$ is $(b,f)$-complete. 
+\end{center}
+\end{proposition}
+\begin{proof}
+The top-down implication is just Proposition \ref{prop:fixpoint-bf}. For bottom up, one can take $f=a(\mu b)$ since $aa(\mu b)=a(\mu b)$. It holds $\mu b \sqsubseteq a(\mu b)$ and thus $\mu(ab) \sqsubseteq a(\mu b)$. The other inclusion $a(\mu b) \sqsubseteq \mu(ab)$ always holds (this is just soundness).
+\end{proof}
+
+
+
 
 
 
