@@ -1,5 +1,5 @@
 \newcommand{\noopsort}[1]{}
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{bp:popl13:hkc}
 F.~Bonchi and D.~Pous.
@@ -17,6 +17,11 @@ B.~A. Davey and H.~A. Priestley.
 \newblock {\em Introduction to Lattices and Order}.
 \newblock Cambridge University Press, 2 edition, 2002.
 
+\bibitem{DBLP:journals/jacm/GiacobazziRS00}
+Roberto Giacobazzi, Francesco Ranzato, and Francesca Scozzari.
+\newblock Making abstract interpretations complete.
+\newblock {\em J. {ACM}}, 47(2):361--416, 2000.
+
 \bibitem{HopcroftKarp}
 J.~E. Hopcroft and R.~M. Karp.
 \newblock A linear algorithm for testing equivalence of finite automata.
@@ -26,6 +31,11 @@ J.~E. Hopcroft and R.~M. Karp.
 John Hopcroft.
 \newblock An n log n algorithm for minimizing states in a finite automaton.
 \newblock Technical report, STANFORD UNIV CALIF DEPT OF COMPUTER SCIENCE, 1971.
+
+\bibitem{hur2013power}
+Chung-Kil Hur, Georg Neis, Derek Dreyer, and Viktor Vafeiadis.
+\newblock The power of parameterization in coinductive proof.
+\newblock {\em ACM SIGPLAN Notices}, 48(1):193--206, 2013.
 
 \bibitem{DBLP:journals/tcs/Klin11}
 B.~Klin.
@@ -37,6 +47,17 @@ D.~Pous and D.~Sangiorgi.
 \newblock Enhancements of the bisimulation proof method.
 \newblock In {\em Advanced Topics in Bisimulation and Coinduction}, pages
   233--289. Cambridge University Press, 2012.
+
+\bibitem{pous2016coinduction}
+Damien Pous.
+\newblock Coinduction all the way up.
+\newblock In {\em Proceedings of the 31st Annual ACM/IEEE Symposium on Logic in
+  Computer Science}, pages 307--316. ACM, 2016.
+
+\bibitem{San98MFCS}
+D.~Sangiorgi.
+\newblock On the bisimulation proof method.
+\newblock {\em MSCS}, 8:447--479, 1998.
 
 \bibitem{turi1997towards}
 Daniele Turi and Gordon Plotkin.
