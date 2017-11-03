@@ -971,13 +971,23 @@ $$
 }}}\end{array}
 $$
 
-Let $a$ be the up-closure operator such that $Pre(a)= \{\top, 4,3,2\}$.
+Let $a$ be the up-closure  such that $Pre(a)= \{\top, 4,3,2\}$.
 Then $\mu (i \sqcup b^*) = 1$ and $a(\mu (i \sqcup b^*) ) =2$.
 Instead $\mu a (i \sqcup b^*)= 3$. Indeed,
 $$\bot \sqsubseteq a (i \sqcup b^*)(\bot)= 2 \sqsubseteq a (i \sqcup b^*)(2)=3 \sqsubseteq a (i \sqcup b^*)(2)=3\text{.}$$
 Therefore, by Lemma \ref{lemma:alternativecompleteness}, $a$ is not complete w.r.t. $i \sqcup b^*$.
 
 However $a$ is $b_*\sqcap f$-sound. Indeed $\nu (b_*\sqcap f)a = 4 =  \nu (b_*\sqcap f)$.
+
+\medskip
+
+\marginpar{to be moved somewhere else}
+Now take $a'$ to be the up-closure  such that $Pre(a)= \{\top, 4,3\}$. In this case one would have that $a'(\mu (i \sqcup b^*) ) = 3 = \mu a' (i \sqcup b^*)$, i.e., $a'$ would be complete.
+Observe that $a\sqsubseteq a'$. Therefore the class of $b$-complete abstract domains is not downward closed.
+
+\marginpar{to be moved somewhere else}
+Observe that $a$ is $(b,f)$-complete for $f=4$, but not for $f=2$. To see the latter, recall that  $\mu (i \sqcup b^*) = 1\sqsubseteq 2$, while $\mu (ab)=3 \not \sqsubseteq 2$.
+
 
 
 
